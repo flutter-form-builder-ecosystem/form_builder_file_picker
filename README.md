@@ -1,14 +1,9 @@
 # form_builder_file_picker
 
-File Picker for FlutterFormBuilder package
+File Picker Field for [FlutterFormBuilder package](https://pub.dev/packages/flutter_form_builder)
 
-## Getting Started
+# Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Read multi_image_picker setup [here](https://sh1d0w.github.io/multi_image_picker/#/initialsetup)
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+Read flutter_file_picker setup [here](https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup#android)

@@ -115,24 +115,24 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
                           Container(
                             margin: EdgeInsets.only(right: 2),
                             child: (key.contains('.jpg') ||
-                                key.contains('.jpeg') ||
-                                key.contains('.png'))
+                                    key.contains('.jpeg') ||
+                                    key.contains('.png'))
                                 ? Image.file(
-                              File(_images[key]),
-                              fit: BoxFit.cover,
-                              height: 150,
-                              width: 150,
-                            )
+                                    File(_images[key]),
+                                    fit: BoxFit.cover,
+                                    height: 150,
+                                    width: 150,
+                                  )
                                 : Container(
-                              child: Icon(
-                                Icons.insert_drive_file,
-                                color: Colors.white,
-                                size: 72,
-                              ),
-                              color: Theme.of(context).primaryColor,
-                              width: 150,
-                              height: 150,
-                            ),
+                                    child: Icon(
+                                      Icons.insert_drive_file,
+                                      color: Colors.white,
+                                      size: 72,
+                                    ),
+                                    color: Theme.of(context).primaryColor,
+                                    width: 150,
+                                    height: 150,
+                                  ),
                           ),
                           if (!_readonly)
                             InkWell(
@@ -175,8 +175,8 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
           .checkPermissionStatus(PermissionGroup.storage);
       if (permission != PermissionStatus.granted) {
         Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler()
-            .requestPermissions([PermissionGroup.storage]);
+            await PermissionHandler()
+                .requestPermissions([PermissionGroup.storage]);
         if (permissions[PermissionGroup.storage] != PermissionStatus.granted)
           throw new Exception("Permission not granted");
       }
