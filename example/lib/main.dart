@@ -33,18 +33,37 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
-      child: FormBuilder(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            FormBuilderFilePicker(
-              attribute: "images",
-              decoration: InputDecoration(labelText: "Attachments"),
-              maxImages: 5,
-            ),
-          ],
+        child: FormBuilder(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              FormBuilderFilePicker(
+                attribute: "images",
+                decoration: InputDecoration(labelText: "Attachments"),
+                maxFiles: 5,
+                multiple: true,
+                previewImages: false,
+                onChanged: (val) => print(val),
+                // fileExtension: "PDF",
+                // fileType: FileType.custom,
+                selector: Row(
+                  children: <Widget>[
+                    Icon(Icons.file_upload),
+                    Text('Upload'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              RaisedButton(
+                child: Text('Submit'),
+                onPressed: () {
+                  _formKey.currentState.save();
+                  print(_formKey.currentState.value);
+                },
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
