@@ -42,10 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: InputDecoration(labelText: "Attachments"),
                 maxFiles: 5,
                 multiple: true,
-                previewImages: false,
+                previewImages: true,
                 onChanged: (val) => print(val),
-                // fileExtension: "PDF",
-                // fileType: FileType.custom,
+                fileExtension: "PDF",
+                fileType: FileType.custom,
                 selector: Row(
                   children: <Widget>[
                     Icon(Icons.file_upload),
