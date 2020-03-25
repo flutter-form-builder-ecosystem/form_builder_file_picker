@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FormBuilderFilePicker extends StatefulWidget {
@@ -16,9 +15,12 @@ class FormBuilderFilePicker extends StatefulWidget {
   final ValueChanged onChanged;
   final ValueTransformer valueTransformer;
 
-  final int maxImages;
-  final CupertinoOptions cupertinoOptions;
-  final MaterialOptions materialOptions;
+  final int maxFiles;
+  final bool multiple;
+  final bool previewImages;
+  final Widget selector;
+  final FileType fileType;
+  final String fileExtension;
 
   FormBuilderFilePicker({
     @required this.attribute,
@@ -28,10 +30,14 @@ class FormBuilderFilePicker extends StatefulWidget {
     this.decoration = const InputDecoration(),
     this.onChanged,
     this.valueTransformer,
-    this.maxImages = 1,
-    this.cupertinoOptions = const CupertinoOptions(),
-    this.materialOptions = const MaterialOptions(),
-  });
+    this.maxFiles = 1,
+    this.multiple = true,
+    this.previewImages = true,
+    this.selector = const Text('Select File(s)'),
+    this.fileType = FileType.any,
+    this.fileExtension,
+  }) : assert(fileExtension != null || fileType != FileType.custom,
+            "For custom fileType a fileExtension must be specified.");
 
   @override
   _FormBuilderFilePickerState createState() => _FormBuilderFilePickerState();
@@ -41,13 +47,14 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
   bool _readonly = false;
   final GlobalKey<FormFieldState> _fieldKey = GlobalKey<FormFieldState>();
   FormBuilderState _formState;
-  Map<String, String> _images = {};
+  Map<String, String> _files;
 
   @override
   void initState() {
     _formState = FormBuilder.of(context);
     _formState?.registerFieldKey(widget.attribute, _fieldKey);
     _readonly = (_formState?.readOnly == true) ? true : widget.readonly;
+    _files = widget.initialValue ?? {};
     super.initState();
   }
 
@@ -57,7 +64,8 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
     super.dispose();
   }
 
-  int get _remainingItemCount => widget.maxImages - _images.length;
+  int get _remainingItemCount =>
+      widget.maxFiles == null ? null : widget.maxFiles - _files.length;
 
   @override
   Widget build(BuildContext context) {
@@ -86,79 +94,24 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
             enabled: !_readonly,
             errorText: field.errorText,
           ),
-          child: Container(
-            height: (_images.keys.length == 0) ? 50 : 200,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text("${_images.length}/${widget.maxImages}"),
-                    FlatButton.icon(
-                      icon: Icon(Icons.add),
-                      label: Text("Select file(s)"),
-                      onPressed: (_readonly || _remainingItemCount <= 0)
-                          ? null
-                          : () => pickFiles(field),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Wrap(
-                      // scrollDirection: Axis.horizontal,
-                      children: List.generate(_images.keys.length, (index) {
-                        var key = _images.keys.toList(growable: false)[index];
-                        return Stack(
-                          alignment: Alignment.topRight,
-                          children: <Widget>[
-                            Container(
-                              height: MediaQuery.of(context).size.width / 4.5,
-                              width: MediaQuery.of(context).size.width / 4.5,
-                              margin: EdgeInsets.only(right: 2),
-                              child: (key.contains('.jpg') ||
-                                      key.contains('.jpeg') ||
-                                      key.contains('.png'))
-                                  ? Image.file(
-                                      File(_images[key]),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Container(
-                                      child: Icon(
-                                        Icons.insert_drive_file,
-                                        color: Colors.white,
-                                        size: 72,
-                                      ),
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                            ),
-                            if (!_readonly)
-                              InkWell(
-                                onTap: () => removeImageAtIndex(index, field),
-                                child: Container(
-                                  margin: EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(.7),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  alignment: Alignment.center,
-                                  height: 22,
-                                  width: 22,
-                                  child: Icon(
-                                    Icons.close,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                    ),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  if (widget.maxFiles != null)
+                    Text("${_files.length}/${widget.maxFiles}"),
+                  InkWell(
+                    child: widget.selector,
+                    onTap: (_readonly || _remainingItemCount <= 0)
+                        ? null
+                        : () => pickFiles(field),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+              SizedBox(height: 3),
+              defaultFileViewer(_files, field),
+            ],
           ),
         );
       },
@@ -179,7 +132,10 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
         if (permissions[PermissionGroup.storage] != PermissionStatus.granted)
           throw new Exception("Permission not granted");
       }
-      resultList = await FilePicker.getMultiFilePath();
+      resultList = await FilePicker.getMultiFilePath(
+        type: widget.fileType,
+        fileExtension: widget.fileExtension,
+      );
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
@@ -188,21 +144,99 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    setState(() {
-      if (resultList != null)
-        _images.addAll(resultList); // .addAll(resultList);
-      // if (error == null) _error = 'No Error Dectected';
-    });
-    field.didChange(_images);
-    if (widget.onChanged != null) widget.onChanged(_images);
+    if (resultList != null) {
+      setState(() => _files.addAll(resultList));
+      // TODO: Pick only remaining number
+      field.didChange(_files);
+      if (widget.onChanged != null) widget.onChanged(_files);
+    }
   }
 
-  void removeImageAtIndex(int index, FormFieldState field) {
-    var keysList = _images.keys.toList(growable: false);
+  void removeFileAtIndex(int index, FormFieldState field) {
+    var keysList = _files.keys.toList(growable: false);
     setState(() {
-      _images.remove(keysList[index]);
+      _files.remove(keysList[index]);
     });
-    field.didChange(_images);
-    if (widget.onChanged != null) widget.onChanged(_images);
+    field.didChange(_files);
+    if (widget.onChanged != null) widget.onChanged(_files);
+  }
+
+  defaultFileViewer(Map<String, String> files, FormFieldState field) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var count = 5;
+        var spacing = 10;
+        var itemSize = (constraints.biggest.width - (count * spacing)) / count;
+        return Wrap(
+          // scrollDirection: Axis.horizontal,
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.start,
+          runSpacing: 10,
+          spacing: 10,
+          children: List.generate(
+            files.keys.length,
+            (index) {
+              var key = files.keys.toList(growable: false)[index];
+              var fileExtension = key.split('.').last.toLowerCase();
+              return Stack(
+                alignment: Alignment.topRight,
+                children: <Widget>[
+                  Container(
+                    height: itemSize,
+                    width: itemSize,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(right: 2),
+                    child: (['jpg', 'jpeg', 'png'].contains(fileExtension) &&
+                            widget.previewImages)
+                        ? Image.file(
+                            File(files[key]),
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            child: Icon(
+                              getIconData(fileExtension),
+                              color: Colors.white,
+                              size: 72,
+                            ),
+                            color: Theme.of(context).primaryColor,
+                          ),
+                  ),
+                  if (!_readonly)
+                    InkWell(
+                      onTap: () => removeFileAtIndex(index, field),
+                      child: Container(
+                        margin: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(.7),
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        height: 22,
+                        width: 22,
+                        child: Icon(
+                          Icons.close,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  IconData getIconData(String fileExtension) {
+    switch (fileExtension) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+        return Icons.image;
+      default:
+        return Icons.insert_drive_file;
+    }
   }
 }
