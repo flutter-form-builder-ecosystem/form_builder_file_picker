@@ -9,16 +9,19 @@ PODS:
   - Flutter (1.0.0)
   - flutter_keyboard_visibility (0.7.0):
     - Flutter
-  - multi_image_picker (4.5.9):
+  - flutter_plugin_android_lifecycle (0.0.1):
+    - Flutter
+  - multi_image_picker (4.6.4):
     - BSImagePicker (~> 2.10.3)
     - Flutter
-  - permission_handler (4.0.0):
+  - "permission_handler (4.4.0+hotfix.2)":
     - Flutter
 
 DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
 
@@ -35,6 +38,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/flutter/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  flutter_plugin_android_lifecycle:
+    :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   multi_image_picker:
     :path: ".symlinks/plugins/multi_image_picker/ios"
   permission_handler:
@@ -47,9 +52,10 @@ SPEC CHECKSUMS:
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
-  multi_image_picker: 68d86c3e3616a64096cb5ef46de9a8195930a3e4
-  permission_handler: 0fb88b8a3c23e31e5de45b8f1bb8b7de28cf8941
+  flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
+  multi_image_picker: 1651732277b2db3b09e83f3be8eb7ea65cf2a933
+  permission_handler: d5d46b2ca93671e8dcf870b949e304c7ddb65ad0
 
 PODFILE CHECKSUM: 2c26e2bafa90f053205a9e99ab1fdce88251e293
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

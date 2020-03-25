@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -97,7 +96,7 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
                     Text("${_images.length}/${widget.maxImages}"),
                     FlatButton.icon(
                       icon: Icon(Icons.add),
-                      label: Text("Add Attachment(s)"),
+                      label: Text("Select file(s)"),
                       onPressed: (_readonly || _remainingItemCount <= 0)
                           ? null
                           : () => pickFiles(field),
@@ -105,57 +104,57 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
                   ],
                 ),
                 Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: List.generate(_images.keys.length, (index) {
-                      var key = _images.keys.toList(growable: false)[index];
-                      return Stack(
-                        alignment: Alignment.topRight,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(right: 2),
-                            child: (key.contains('.jpg') ||
-                                    key.contains('.jpeg') ||
-                                    key.contains('.png'))
-                                ? Image.file(
-                                    File(_images[key]),
-                                    fit: BoxFit.cover,
-                                    height: 150,
-                                    width: 150,
-                                  )
-                                : Container(
-                                    child: Icon(
-                                      Icons.insert_drive_file,
-                                      color: Colors.white,
-                                      size: 72,
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      // scrollDirection: Axis.horizontal,
+                      children: List.generate(_images.keys.length, (index) {
+                        var key = _images.keys.toList(growable: false)[index];
+                        return Stack(
+                          alignment: Alignment.topRight,
+                          children: <Widget>[
+                            Container(
+                              height: MediaQuery.of(context).size.width / 4.5,
+                              width: MediaQuery.of(context).size.width / 4.5,
+                              margin: EdgeInsets.only(right: 2),
+                              child: (key.contains('.jpg') ||
+                                      key.contains('.jpeg') ||
+                                      key.contains('.png'))
+                                  ? Image.file(
+                                      File(_images[key]),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Container(
+                                      child: Icon(
+                                        Icons.insert_drive_file,
+                                        color: Colors.white,
+                                        size: 72,
+                                      ),
+                                      color: Theme.of(context).primaryColor,
                                     ),
-                                    color: Theme.of(context).primaryColor,
-                                    width: 150,
-                                    height: 150,
+                            ),
+                            if (!_readonly)
+                              InkWell(
+                                onTap: () => removeImageAtIndex(index, field),
+                                child: Container(
+                                  margin: EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.7),
+                                    shape: BoxShape.circle,
                                   ),
-                          ),
-                          if (!_readonly)
-                            InkWell(
-                              onTap: () => removeImageAtIndex(index, field),
-                              child: Container(
-                                margin: EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(.7),
-                                  shape: BoxShape.circle,
-                                ),
-                                alignment: Alignment.center,
-                                height: 22,
-                                width: 22,
-                                child: Icon(
-                                  Icons.close,
-                                  size: 18,
-                                  color: Colors.white,
+                                  alignment: Alignment.center,
+                                  height: 22,
+                                  width: 22,
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
-                      );
-                    }),
+                          ],
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ],
