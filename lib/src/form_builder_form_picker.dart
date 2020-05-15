@@ -20,7 +20,9 @@ class FormBuilderFilePicker extends StatefulWidget {
   final bool previewImages;
   final Widget selector;
   final FileType fileType;
+  @Deprecated("Kindly use allowedExtensions")
   final String fileExtension;
+  final List<String> allowedExtensions;
 
   FormBuilderFilePicker({
     @required this.attribute,
@@ -36,8 +38,8 @@ class FormBuilderFilePicker extends StatefulWidget {
     this.selector = const Text('Select File(s)'),
     this.fileType = FileType.any,
     this.fileExtension,
-  }) : assert(fileExtension != null || fileType != FileType.custom,
-            "For custom fileType a fileExtension must be specified.");
+    this.allowedExtensions,
+  });
 
   @override
   _FormBuilderFilePickerState createState() => _FormBuilderFilePickerState();
@@ -122,20 +124,15 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
     Map<String, String> resultList = {};
 
     try {
-      // PermissionStatus permissionStatus = await SimplePermissions.getPermissionStatus(Permission.ReadExternalStorage);
-      PermissionStatus permission = await PermissionHandler()
-          .checkPermissionStatus(PermissionGroup.storage);
-      if (permission != PermissionStatus.granted) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler()
-                .requestPermissions([PermissionGroup.storage]);
-        if (permissions[PermissionGroup.storage] != PermissionStatus.granted)
-          throw new Exception("Permission not granted");
+      if (await Permission.storage.request().isGranted) {
+        resultList = await FilePicker.getMultiFilePath(
+          type: widget.fileType,
+          allowedExtensions: widget.allowedExtensions,
+          // fileExtension: widget.fileExtension,
+        );
+      } else {
+        throw new Exception("Storage Permission not granted");
       }
-      resultList = await FilePicker.getMultiFilePath(
-        type: widget.fileType,
-        fileExtension: widget.fileExtension,
-      );
     } on Exception catch (e) {
       debugPrint(e.toString());
     }

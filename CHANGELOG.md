@@ -1,3 +1,7 @@
+## [0.2.0] - 15-May-2020.
+* Bumped up dependency versions: `flutter_form_builder`, `file_picker` and `permission_handler`
+* Deprecated `fileExtension` attribute. `allowedExtensions` to be used.
+
 ## [0.1.0] - 25-Mar-2020.
 * Added more options: `previewImages`, `selector`, `fileType`, `fileExtension`
 * BREAKING CHANGE: Renamed `maxImages` to `maxFiles`
