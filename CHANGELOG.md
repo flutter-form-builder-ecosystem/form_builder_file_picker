@@ -1,3 +1,8 @@
+## [0.3.0] - 09-Aug-2020.
+* Bump dependency `file_picker` plugin. Include additional `file_picker` options
+* Included MIT License. Closes #3
+* Fix bug caused when `maxFiles` is null. Closes #4
+
 ## [0.2.0] - 15-May-2020.
 * Bumped up dependency versions: `flutter_form_builder`, `file_picker` and `permission_handler`
 * Deprecated `fileExtension` attribute. `allowedExtensions` to be used.

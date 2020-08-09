@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text('Upload'),
                   ],
                 ),
-                onFileLoading: (val){
+                onFileLoading: (val) {
                   print(val);
                 },
               ),

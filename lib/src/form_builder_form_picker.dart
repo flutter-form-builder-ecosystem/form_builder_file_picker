@@ -35,7 +35,7 @@ class FormBuilderFilePicker extends StatefulWidget {
     this.decoration = const InputDecoration(),
     this.onChanged,
     this.valueTransformer,
-    this.maxFiles = 1,
+    this.maxFiles,
     this.multiple = true,
     this.previewImages = true,
     this.selector = const Text('Select File(s)'),
@@ -110,7 +110,9 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
                     Text("${_files.length}/${widget.maxFiles}"),
                   InkWell(
                     child: widget.selector,
-                    onTap: (_readonly || _remainingItemCount <= 0)
+                    onTap: (_readonly ||
+                            (_remainingItemCount != null &&
+                                _remainingItemCount <= 0))
                         ? null
                         : () => pickFiles(field),
                   ),
