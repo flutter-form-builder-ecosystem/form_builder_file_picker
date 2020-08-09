@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:file_picker_platform_interface/file_picker_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,6 +24,8 @@ class FormBuilderFilePicker extends StatefulWidget {
   @Deprecated("Kindly use allowedExtensions")
   final String fileExtension;
   final List<String> allowedExtensions;
+  final Function(FilePickerStatus) onFileLoading;
+  final bool allowCompression;
 
   FormBuilderFilePicker({
     @required this.attribute,
@@ -39,6 +42,8 @@ class FormBuilderFilePicker extends StatefulWidget {
     this.fileType = FileType.any,
     this.fileExtension,
     this.allowedExtensions,
+    this.onFileLoading,
+    this.allowCompression,
   });
 
   @override
@@ -128,7 +133,8 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
         resultList = await FilePicker.getMultiFilePath(
           type: widget.fileType,
           allowedExtensions: widget.allowedExtensions,
-          // fileExtension: widget.fileExtension,
+          allowCompression: widget.allowCompression,
+          onFileLoading: widget.onFileLoading,
         );
       } else {
         throw new Exception("Storage Permission not granted");
@@ -145,7 +151,7 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
       setState(() => _files.addAll(resultList));
       // TODO: Pick only remaining number
       field.didChange(_files);
-      if (widget.onChanged != null) widget.onChanged(_files);
+      widget.onChanged?.call(_files);
     }
   }
 
@@ -185,10 +191,7 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
                     margin: EdgeInsets.only(right: 2),
                     child: (['jpg', 'jpeg', 'png'].contains(fileExtension) &&
                             widget.previewImages)
-                        ? Image.file(
-                            File(files[key]),
-                            fit: BoxFit.cover,
-                          )
+                        ? Image.file(File(files[key]), fit: BoxFit.cover)
                         : Container(
                             child: Icon(
                               getIconData(fileExtension),
@@ -210,11 +213,7 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
                         alignment: Alignment.center,
                         height: 22,
                         width: 22,
-                        child: Icon(
-                          Icons.close,
-                          size: 18,
-                          color: Colors.white,
-                        ),
+                        child: Icon(Icons.close, size: 18, color: Colors.white),
                       ),
                     ),
                 ],

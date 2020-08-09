@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
               FormBuilderFilePicker(
                 attribute: "images",
                 decoration: InputDecoration(labelText: "Attachments"),
-                maxFiles: 5,
+                maxFiles: null,
                 multiple: true,
                 previewImages: true,
                 onChanged: (val) => print(val),
@@ -52,6 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text('Upload'),
                   ],
                 ),
+                onFileLoading: (val){
+                  print(val);
+                },
               ),
               SizedBox(height: 20),
               RaisedButton(
