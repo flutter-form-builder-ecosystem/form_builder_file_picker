@@ -1,145 +1,171 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_picker_platform_interface/file_picker_platform_interface.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class FormBuilderFilePicker extends StatefulWidget {
-  final String attribute;
-  final List<FormFieldValidator> validators;
-  final Map<String, String> initialValue;
-  final bool readonly;
-  final InputDecoration decoration;
-  final ValueChanged onChanged;
-  final ValueTransformer valueTransformer;
-
+/// Field for image(s) from user device storage
+class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
+  /// Maximum number of files needed for this field
   final int maxFiles;
-  final bool multiple;
+
+  /// Allows picking of multiple files
+  final bool allowMultiple;
+
+  /// If set to true, a thumbnail of image files will be shown; else the default
+  /// icon will be displayed depending on file type
   final bool previewImages;
+
+  /// Widget to be tapped on by user in order to pick files
   final Widget selector;
-  final FileType fileType;
-  @Deprecated("Kindly use allowedExtensions")
-  final String fileExtension;
+
+  /// Default types of files to be picked. Default set to [FileType.any]
+  final FileType type;
+
+  /// Allowed file extensions for files to be selected
   final List<String> allowedExtensions;
-  final Function(FilePickerStatus) onFileLoading;
+
+  /// If you want to track picking status, for example, because some files may take some time to be
+  /// cached (particularly those picked from cloud providers), you may want to set [onFileLoading] handler
+  /// that will give you the current status of picking.
+  final void Function(FilePickerStatus) onFileLoading;
+
+  /// Whether to allow file compression
   final bool allowCompression;
 
+  /// If [withData] is set, picked files will have its byte data immediately available on memory as [Uint8List]
+  /// which can be useful if you are picking it for server upload or similar.
+  final bool withData;
+
+  /// If [withReadStream] is set, picked files will have its byte data available as a [Stream<List<int>>]
+  /// which can be useful for uploading and processing large files.
+  final bool withReadStream;
+
+  /// Creates field for image(s) from user device storage
   FormBuilderFilePicker({
-    @required this.attribute,
-    this.initialValue,
-    this.validators = const [],
-    this.readonly = false,
-    this.decoration = const InputDecoration(),
-    this.onChanged,
-    this.valueTransformer,
+    //From Super
+    Key key,
+    @required String name,
+    FormFieldValidator<List<PlatformFile>> validator,
+    List<PlatformFile> initialValue,
+    InputDecoration decoration = const InputDecoration(),
+    ValueChanged<List<PlatformFile>> onChanged,
+    ValueTransformer<List<PlatformFile>> valueTransformer,
+    bool enabled = true,
+    FormFieldSetter<List<PlatformFile>> onSaved,
+    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
+    VoidCallback onReset,
+    FocusNode focusNode,
     this.maxFiles,
-    this.multiple = true,
+    this.withData = false,
+    this.withReadStream = false,
+    this.allowMultiple = true,
     this.previewImages = true,
-    this.selector = const Text('Select File(s)'),
-    this.fileType = FileType.any,
-    this.fileExtension,
+    this.selector = const Icon(Icons.add_circle),
+    this.type = FileType.any,
     this.allowedExtensions,
     this.onFileLoading,
     this.allowCompression,
-  });
+  }) : super(
+    key: key,
+    initialValue: initialValue,
+    name: name,
+    validator: validator,
+    valueTransformer: valueTransformer,
+    onChanged: onChanged,
+    autovalidateMode: autovalidateMode,
+    onSaved: onSaved,
+    enabled: enabled,
+    onReset: onReset,
+    decoration: decoration,
+    focusNode: focusNode,
+    builder: (FormFieldState<List<PlatformFile>> field) {
+      final state = field as _FormBuilderFilePickerState;
+
+      return InputDecorator(
+        decoration: state.decoration(),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                if (maxFiles != null)
+                  Text('${state._files.length} / $maxFiles'),
+                InkWell(
+                  child: selector,
+                  onTap: state.enabled &&
+                      (null == state._remainingItemCount ||
+                          state._remainingItemCount > 0)
+                      ? () => state.pickFiles(field)
+                      : null,
+                ),
+              ],
+            ),
+            const SizedBox(height: 3),
+            state.defaultFileViewer(state._files, field),
+          ],
+        ),
+      );
+    },
+  );
 
   @override
   _FormBuilderFilePickerState createState() => _FormBuilderFilePickerState();
 }
 
-class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
-  bool _readonly = false;
-  final GlobalKey<FormFieldState> _fieldKey = GlobalKey<FormFieldState>();
-  FormBuilderState _formState;
-  Map<String, String> _files;
+class _FormBuilderFilePickerState
+    extends FormBuilderFieldState<FormBuilderFilePicker, List<PlatformFile>> {
+  /// Image File Extensions.
+  ///
+  /// Note that images may be previewed.
+  ///
+  /// This list is inspired by [Image](https://api.flutter.dev/flutter/widgets/Image-class.html)
+  /// and [instantiateImageCodec](https://api.flutter.dev/flutter/dart-ui/instantiateImageCodec.html):
+  /// "The following image formats are supported: JPEG, PNG, GIF,
+  /// Animated GIF, WebP, Animated WebP, BMP, and WBMP."
+  static const imageFileExts = [
+    'gif',
+    'jpg',
+    'jpeg',
+    'png',
+    'webp',
+    'bmp',
+    'dib',
+    'wbmp',
+  ];
 
-  @override
-  void initState() {
-    _formState = FormBuilder.of(context);
-    _formState?.registerFieldKey(widget.attribute, _fieldKey);
-    _readonly = (_formState?.readOnly == true) ? true : widget.readonly;
-    _files = widget.initialValue ?? {};
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _formState?.unregisterFieldKey(widget.attribute);
-    super.dispose();
-  }
+  List<PlatformFile> _files;
 
   int get _remainingItemCount =>
       widget.maxFiles == null ? null : widget.maxFiles - _files.length;
 
   @override
-  Widget build(BuildContext context) {
-    return FormField(
-      key: _fieldKey,
-      enabled: !_readonly,
-      initialValue: widget.initialValue,
-      validator: (val) {
-        for (int i = 0; i < widget.validators.length; i++) {
-          if (widget.validators[i](val) != null)
-            return widget.validators[i](val);
-        }
-        return null;
-      },
-      onSaved: (val) {
-        if (widget.valueTransformer != null) {
-          var transformed = widget.valueTransformer(val);
-          FormBuilder.of(context)
-              ?.setAttributeValue(widget.attribute, transformed);
-        } else
-          _formState?.setAttributeValue(widget.attribute, val);
-      },
-      builder: (FormFieldState<Map<String, String>> field) {
-        return InputDecorator(
-          decoration: widget.decoration.copyWith(
-            enabled: !_readonly,
-            errorText: field.errorText,
-          ),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  if (widget.maxFiles != null)
-                    Text("${_files.length}/${widget.maxFiles}"),
-                  InkWell(
-                    child: widget.selector,
-                    onTap: (_readonly ||
-                            (_remainingItemCount != null &&
-                                _remainingItemCount <= 0))
-                        ? null
-                        : () => pickFiles(field),
-                  ),
-                ],
-              ),
-              SizedBox(height: 3),
-              defaultFileViewer(_files, field),
-            ],
-          ),
-        );
-      },
-    );
+  void initState() {
+    super.initState();
+    _files = widget.initialValue ?? [];
   }
 
-  Future<void> pickFiles(FormFieldState field) async {
-    Map<String, String> resultList = {};
+  Future<void> pickFiles(FormFieldState<List<PlatformFile>> field) async {
+    FilePickerResult resultList;
 
     try {
       if (await Permission.storage.request().isGranted) {
-        resultList = await FilePicker.getMultiFilePath(
-          type: widget.fileType,
+        resultList = await FilePicker.platform.pickFiles(
+          type: widget.type,
           allowedExtensions: widget.allowedExtensions,
           allowCompression: widget.allowCompression,
           onFileLoading: widget.onFileLoading,
+          allowMultiple: widget.allowMultiple,
+          withData: widget.withData,
+          withReadStream: widget.withReadStream,
         );
       } else {
-        throw new Exception("Storage Permission not granted");
+        throw Exception('Storage Permission not granted');
       }
     } on Exception catch (e) {
       debugPrint(e.toString());
@@ -150,28 +176,31 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
     if (!mounted) return;
 
     if (resultList != null) {
-      setState(() => _files.addAll(resultList));
+      setState(() => _files.addAll(resultList.files));
       // TODO: Pick only remaining number
       field.didChange(_files);
       widget.onChanged?.call(_files);
     }
   }
 
-  void removeFileAtIndex(int index, FormFieldState field) {
-    var keysList = _files.keys.toList(growable: false);
+  void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>> field) {
     setState(() {
-      _files.remove(keysList[index]);
+      _files.removeAt(index);
     });
     field.didChange(_files);
-    if (widget.onChanged != null) widget.onChanged(_files);
+    widget.onChanged?.call(_files);
   }
 
-  defaultFileViewer(Map<String, String> files, FormFieldState field) {
+  Widget defaultFileViewer(
+      List<PlatformFile> files, FormFieldState<List<PlatformFile>> field) {
+    final theme = Theme.of(context);
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        var count = 5;
-        var spacing = 10;
-        var itemSize = (constraints.biggest.width - (count * spacing)) / count;
+        const count = 3;
+        const spacing = 10;
+        final itemSize =
+            (constraints.biggest.width - (count * spacing)) / count;
         return Wrap(
           // scrollDirection: Axis.horizontal,
           alignment: WrapAlignment.start,
@@ -179,46 +208,68 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
           runSpacing: 10,
           spacing: 10,
           children: List.generate(
-            files.keys.length,
-            (index) {
-              var key = files.keys.toList(growable: false)[index];
-              var fileExtension = key.split('.').last.toLowerCase();
-              return Stack(
-                alignment: Alignment.topRight,
-                children: <Widget>[
-                  Container(
-                    height: itemSize,
-                    width: itemSize,
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(right: 2),
-                    child: (['jpg', 'jpeg', 'png'].contains(fileExtension) &&
-                            widget.previewImages)
-                        ? Image.file(File(files[key]), fit: BoxFit.cover)
-                        : Container(
-                            child: Icon(
-                              getIconData(fileExtension),
-                              color: Colors.white,
-                              size: 72,
-                            ),
-                            color: Theme.of(context).primaryColor,
-                          ),
-                  ),
-                  if (!_readonly)
-                    InkWell(
-                      onTap: () => removeFileAtIndex(index, field),
-                      child: Container(
-                        margin: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(.7),
-                          shape: BoxShape.circle,
-                        ),
+            files.length,
+                (index) {
+              return Container(
+                height: itemSize,
+                width: itemSize,
+                margin: const EdgeInsets.only(right: 2),
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      child: (imageFileExts.contains(
+                          files[index].extension.toLowerCase()) &&
+                          widget.previewImages)
+                          ? Image.file(File(files[index].path),
+                          fit: BoxFit.cover)
+                          : Container(
                         alignment: Alignment.center,
-                        height: 22,
-                        width: 22,
-                        child: Icon(Icons.close, size: 18, color: Colors.white),
+                        child: Icon(
+                          getIconData(files[index].extension),
+                          color: Colors.white,
+                          size: 56,
+                        ),
+                        color: theme.primaryColor,
                       ),
                     ),
-                ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Text(
+                        files[index].name,
+                        style: theme.textTheme.caption,
+                        maxLines: 2,
+                        overflow: TextOverflow.clip,
+                      ),
+                      width: double.infinity,
+                      color: Colors.white.withOpacity(.8),
+                    ),
+                    if (enabled)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: InkWell(
+                          onTap: () => removeFileAtIndex(index, field),
+                          child: Container(
+                            margin: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(.7),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            height: 22,
+                            width: 22,
+                            child: const Icon(
+                              Icons.close,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               );
             },
           ),
@@ -228,13 +279,20 @@ class _FormBuilderFilePickerState extends State<FormBuilderFilePicker> {
   }
 
   IconData getIconData(String fileExtension) {
-    switch (fileExtension) {
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-        return Icons.image;
-      default:
-        return Icons.insert_drive_file;
-    }
+    // Check if the file is an image first (because there is a shared variable
+    // with preview logic), and then fallback to non-image file ext lookup.
+    const nonImageFileExtIcons = {
+      'doc': CommunityMaterialIcons.file_word,
+      'docx': CommunityMaterialIcons.file_word,
+      'log': CommunityMaterialIcons.script_text,
+      'pdf': CommunityMaterialIcons.file_pdf,
+      'txt': CommunityMaterialIcons.script_text,
+      'xls': CommunityMaterialIcons.file_excel,
+      'xlsx': CommunityMaterialIcons.file_excel,
+    };
+    final lowerCaseFileExt = fileExtension.toLowerCase();
+    return imageFileExts.contains(lowerCaseFileExt)
+        ? Icons.image
+        : nonImageFileExtIcons[lowerCaseFileExt] ?? Icons.insert_drive_file;
   }
 }

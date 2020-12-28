@@ -38,14 +38,11 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: <Widget>[
               FormBuilderFilePicker(
-                attribute: "images",
+                name: "images",
                 decoration: InputDecoration(labelText: "Attachments"),
                 maxFiles: null,
-                multiple: true,
                 previewImages: true,
                 onChanged: (val) => print(val),
-                fileExtension: "PDF",
-                fileType: FileType.custom,
                 selector: Row(
                   children: <Widget>[
                     Icon(Icons.file_upload),

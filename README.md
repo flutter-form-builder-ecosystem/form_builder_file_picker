@@ -9,22 +9,23 @@ Since this package makes use of [file_picker package](https://pub.dev/packages/f
 # Usage
 
 ```dart
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_file_picker/form_builder_file_picker.dart';
+ import 'package:flutter_form_builder/flutter_form_builder.dart';
+ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
-FormBuilderFilePicker(
-    attribute: "images",
+  FormBuilderFilePicker(
+    name: "images",
     decoration: InputDecoration(labelText: "Attachments"),
-    maxFiles: 5,
-    multiple: true,
+    maxFiles: null,
     previewImages: true,
     onChanged: (val) => print(val),
-    fileType: FileType.any,
     selector: Row(
       children: <Widget>[
         Icon(Icons.file_upload),
         Text('Upload'),
       ],
     ),
-),
+    onFileLoading: (val) {
+      print(val);
+    },
+  ),
 ```
