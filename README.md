@@ -1,6 +1,6 @@
 # form_builder_file_picker
 
-File Picker Field for [FlutterFormBuilder package](https://pub.dev/packages/flutter_form_builder)
+File Picker Field for [flutter_form_builder](https://pub.dev/packages/flutter_form_builder) package
 
 # Setup
 

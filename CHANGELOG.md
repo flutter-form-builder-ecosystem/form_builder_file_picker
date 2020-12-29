@@ -1,3 +1,6 @@
+## [1.0.0] - 29-Dec-2020.
+*  Added support for flutter_form_builder 4.*
+
 ## [0.3.0] - 09-Aug-2020.
 * Bump dependency `file_picker` plugin. Include additional `file_picker` options
 * Included MIT License. Closes #3

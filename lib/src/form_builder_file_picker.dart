@@ -72,47 +72,47 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.onFileLoading,
     this.allowCompression,
   }) : super(
-    key: key,
-    initialValue: initialValue,
-    name: name,
-    validator: validator,
-    valueTransformer: valueTransformer,
-    onChanged: onChanged,
-    autovalidateMode: autovalidateMode,
-    onSaved: onSaved,
-    enabled: enabled,
-    onReset: onReset,
-    decoration: decoration,
-    focusNode: focusNode,
-    builder: (FormFieldState<List<PlatformFile>> field) {
-      final state = field as _FormBuilderFilePickerState;
+          key: key,
+          initialValue: initialValue,
+          name: name,
+          validator: validator,
+          valueTransformer: valueTransformer,
+          onChanged: onChanged,
+          autovalidateMode: autovalidateMode,
+          onSaved: onSaved,
+          enabled: enabled,
+          onReset: onReset,
+          decoration: decoration,
+          focusNode: focusNode,
+          builder: (FormFieldState<List<PlatformFile>> field) {
+            final state = field as _FormBuilderFilePickerState;
 
-      return InputDecorator(
-        decoration: state.decoration(),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                if (maxFiles != null)
-                  Text('${state._files.length} / $maxFiles'),
-                InkWell(
-                  child: selector,
-                  onTap: state.enabled &&
-                      (null == state._remainingItemCount ||
-                          state._remainingItemCount > 0)
-                      ? () => state.pickFiles(field)
-                      : null,
-                ),
-              ],
-            ),
-            const SizedBox(height: 3),
-            state.defaultFileViewer(state._files, field),
-          ],
-        ),
-      );
-    },
-  );
+            return InputDecorator(
+              decoration: state.decoration(),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      if (maxFiles != null)
+                        Text('${state._files.length} / $maxFiles'),
+                      InkWell(
+                        child: selector,
+                        onTap: state.enabled &&
+                                (null == state._remainingItemCount ||
+                                    state._remainingItemCount > 0)
+                            ? () => state.pickFiles(field)
+                            : null,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  state.defaultFileViewer(state._files, field),
+                ],
+              ),
+            );
+          },
+        );
 
   @override
   _FormBuilderFilePickerState createState() => _FormBuilderFilePickerState();
@@ -209,7 +209,7 @@ class _FormBuilderFilePickerState
           spacing: 10,
           children: List.generate(
             files.length,
-                (index) {
+            (index) {
               return Container(
                 height: itemSize,
                 width: itemSize,
@@ -220,19 +220,19 @@ class _FormBuilderFilePickerState
                     Container(
                       alignment: Alignment.center,
                       child: (imageFileExts.contains(
-                          files[index].extension.toLowerCase()) &&
-                          widget.previewImages)
+                                  files[index].extension.toLowerCase()) &&
+                              widget.previewImages)
                           ? Image.file(File(files[index].path),
-                          fit: BoxFit.cover)
+                              fit: BoxFit.cover)
                           : Container(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          getIconData(files[index].extension),
-                          color: Colors.white,
-                          size: 56,
-                        ),
-                        color: theme.primaryColor,
-                      ),
+                              alignment: Alignment.center,
+                              child: Icon(
+                                getIconData(files[index].extension),
+                                color: Colors.white,
+                                size: 56,
+                              ),
+                              color: theme.primaryColor,
+                            ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
