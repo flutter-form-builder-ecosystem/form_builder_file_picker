@@ -1,3 +1,6 @@
+## [1.1.0] - 25-Mar-2021.
+* `flutter_form_bulder` v5 compatible
+
 ## [1.0.0] - 29-Dec-2020.
 *  Added support for flutter_form_builder 4.*
 
