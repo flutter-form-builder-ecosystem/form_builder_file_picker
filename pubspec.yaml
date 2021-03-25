@@ -10,14 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_form_builder: ^4.2.0
-  file_picker: ^2.1.4
-  permission_handler: ^5.0.1+1
-  file_picker_platform_interface: ^2.0.0
-  community_material_icon: ^5.8.55
+  flutter_form_builder: ^5.0.0
+  file_picker: ^3.0.0
+  permission_handler: ^6.1.1
+  community_material_icon: ^5.9.55
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  pedantic: ^1.11.0
 flutter:
