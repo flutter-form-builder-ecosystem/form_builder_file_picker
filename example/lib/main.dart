@@ -23,13 +23,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  GlobalKey<FormBuilderState> _formKey = GlobalKey();
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("FormBuilder FilePicker Example"),
+        title: Text('FormBuilder FilePicker Example'),
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
@@ -38,8 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: <Widget>[
               FormBuilderFilePicker(
-                name: "images",
-                decoration: InputDecoration(labelText: "Attachments"),
+                name: 'images',
+                decoration: InputDecoration(labelText: 'Attachments'),
                 maxFiles: null,
                 previewImages: true,
                 onChanged: (val) => print(val),
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               SizedBox(height: 20),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Submit'),
                 onPressed: () {
                   _formKey.currentState.save();

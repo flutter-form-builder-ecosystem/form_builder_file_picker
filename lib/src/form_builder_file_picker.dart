@@ -97,12 +97,12 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                       if (maxFiles != null)
                         Text('${state._files.length} / $maxFiles'),
                       InkWell(
-                        child: selector,
                         onTap: state.enabled &&
                                 (null == state._remainingItemCount ||
                                     state._remainingItemCount > 0)
                             ? () => state.pickFiles(field)
                             : null,
+                        child: selector,
                       ),
                     ],
                   ),
@@ -226,24 +226,24 @@ class _FormBuilderFilePickerState
                               fit: BoxFit.cover)
                           : Container(
                               alignment: Alignment.center,
+                              color: theme.primaryColor,
                               child: Icon(
                                 getIconData(files[index].extension),
                                 color: Colors.white,
                                 size: 56,
                               ),
-                              color: theme.primaryColor,
                             ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
+                      width: double.infinity,
+                      color: Colors.white.withOpacity(.8),
                       child: Text(
                         files[index].name,
                         style: theme.textTheme.caption,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
                       ),
-                      width: double.infinity,
-                      color: Colors.white.withOpacity(.8),
                     ),
                     if (enabled)
                       Positioned(
@@ -279,20 +279,25 @@ class _FormBuilderFilePickerState
   }
 
   IconData getIconData(String fileExtension) {
+    final lowerCaseFileExt = fileExtension.toLowerCase();
+    if (imageFileExts.contains(lowerCaseFileExt)) return Icons.image;
     // Check if the file is an image first (because there is a shared variable
     // with preview logic), and then fallback to non-image file ext lookup.
-    const nonImageFileExtIcons = {
-      'doc': CommunityMaterialIcons.file_word,
-      'docx': CommunityMaterialIcons.file_word,
-      'log': CommunityMaterialIcons.script_text,
-      'pdf': CommunityMaterialIcons.file_pdf,
-      'txt': CommunityMaterialIcons.script_text,
-      'xls': CommunityMaterialIcons.file_excel,
-      'xlsx': CommunityMaterialIcons.file_excel,
-    };
-    final lowerCaseFileExt = fileExtension.toLowerCase();
-    return imageFileExts.contains(lowerCaseFileExt)
-        ? Icons.image
-        : nonImageFileExtIcons[lowerCaseFileExt] ?? Icons.insert_drive_file;
+    switch (lowerCaseFileExt) {
+      case 'doc':
+      case 'docx':
+        return CommunityMaterialIcons.file_word;
+      case 'log':
+        return CommunityMaterialIcons.script_text;
+      case 'pdf':
+        return CommunityMaterialIcons.file_pdf;
+      case 'txt':
+        return CommunityMaterialIcons.script_text;
+      case 'xls':
+      case 'xlsx':
+        return CommunityMaterialIcons.file_excel;
+      default:
+        return Icons.insert_drive_file;
+    }
   }
 }
