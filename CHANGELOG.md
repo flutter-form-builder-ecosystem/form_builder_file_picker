@@ -1,3 +1,6 @@
+## [1.2.0-nullsafety.0] - 20-May-2021.
+* Ported to null-safety
+
 ## [1.1.0] - 25-Mar-2021.
 * `flutter_form_bulder` v5 compatible
 

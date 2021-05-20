@@ -12,7 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 /// Field for image(s) from user device storage
 class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Maximum number of files needed for this field
-  final int maxFiles;
+  final int? maxFiles;
 
   /// Allows picking of multiple files
   final bool allowMultiple;
@@ -28,15 +28,15 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   final FileType type;
 
   /// Allowed file extensions for files to be selected
-  final List<String> allowedExtensions;
+  final List<String>? allowedExtensions;
 
   /// If you want to track picking status, for example, because some files may take some time to be
   /// cached (particularly those picked from cloud providers), you may want to set [onFileLoading] handler
   /// that will give you the current status of picking.
-  final void Function(FilePickerStatus) onFileLoading;
+  final void Function(FilePickerStatus)? onFileLoading;
 
   /// Whether to allow file compression
-  final bool allowCompression;
+  final bool? allowCompression;
 
   /// If [withData] is set, picked files will have its byte data immediately available on memory as [Uint8List]
   /// which can be useful if you are picking it for server upload or similar.
@@ -49,22 +49,22 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Creates field for image(s) from user device storage
   FormBuilderFilePicker({
     //From Super
-    Key key,
-    @required String name,
-    FormFieldValidator<List<PlatformFile>> validator,
-    List<PlatformFile> initialValue,
+    Key? key,
+    required String name,
+    FormFieldValidator<List<PlatformFile>>? validator,
+    List<PlatformFile>? initialValue,
     InputDecoration decoration = const InputDecoration(),
-    ValueChanged<List<PlatformFile>> onChanged,
-    ValueTransformer<List<PlatformFile>> valueTransformer,
+    ValueChanged<List<PlatformFile>?>? onChanged,
+    ValueTransformer<List<PlatformFile>?>? valueTransformer,
     bool enabled = true,
-    FormFieldSetter<List<PlatformFile>> onSaved,
+    FormFieldSetter<List<PlatformFile>>? onSaved,
     AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
-    VoidCallback onReset,
-    FocusNode focusNode,
+    VoidCallback? onReset,
+    FocusNode? focusNode,
     this.maxFiles,
     this.withData = false,
     this.withReadStream = false,
-    this.allowMultiple = true,
+    this.allowMultiple = false,
     this.previewImages = true,
     this.selector = const Icon(Icons.add_circle),
     this.type = FileType.any,
@@ -84,7 +84,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
           onReset: onReset,
           decoration: decoration,
           focusNode: focusNode,
-          builder: (FormFieldState<List<PlatformFile>> field) {
+          builder: (FormFieldState<List<PlatformFile>?> field) {
             final state = field as _FormBuilderFilePickerState;
 
             return InputDecorator(
@@ -95,11 +95,11 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       if (maxFiles != null)
-                        Text('${state._files.length} / $maxFiles'),
+                        Text('${state._files!.length} / $maxFiles'),
                       InkWell(
                         onTap: state.enabled &&
                                 (null == state._remainingItemCount ||
-                                    state._remainingItemCount > 0)
+                                    state._remainingItemCount! > 0)
                             ? () => state.pickFiles(field)
                             : null,
                         child: selector,
@@ -139,10 +139,10 @@ class _FormBuilderFilePickerState
     'wbmp',
   ];
 
-  List<PlatformFile> _files;
+  List<PlatformFile>? _files;
 
-  int get _remainingItemCount =>
-      widget.maxFiles == null ? null : widget.maxFiles - _files.length;
+  int? get _remainingItemCount =>
+      widget.maxFiles == null ? null : widget.maxFiles! - _files!.length;
 
   @override
   void initState() {
@@ -150,8 +150,8 @@ class _FormBuilderFilePickerState
     _files = widget.initialValue ?? [];
   }
 
-  Future<void> pickFiles(FormFieldState<List<PlatformFile>> field) async {
-    FilePickerResult resultList;
+  Future<void> pickFiles(FormFieldState<List<PlatformFile>?> field) async {
+    FilePickerResult? resultList;
 
     try {
       if (await Permission.storage.request().isGranted) {
@@ -176,23 +176,23 @@ class _FormBuilderFilePickerState
     if (!mounted) return;
 
     if (resultList != null) {
-      setState(() => _files.addAll(resultList.files));
+      setState(() => _files!.addAll(resultList!.files));
       // TODO: Pick only remaining number
       field.didChange(_files);
       widget.onChanged?.call(_files);
     }
   }
 
-  void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>> field) {
+  void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>?> field) {
     setState(() {
-      _files.removeAt(index);
+      _files!.removeAt(index);
     });
     field.didChange(_files);
     widget.onChanged?.call(_files);
   }
 
   Widget defaultFileViewer(
-      List<PlatformFile> files, FormFieldState<List<PlatformFile>> field) {
+      List<PlatformFile>? files, FormFieldState<List<PlatformFile>?> field) {
     final theme = Theme.of(context);
 
     return LayoutBuilder(
@@ -208,7 +208,7 @@ class _FormBuilderFilePickerState
           runSpacing: 10,
           spacing: 10,
           children: List.generate(
-            files.length,
+            files!.length,
             (index) {
               return Container(
                 height: itemSize,
@@ -220,15 +220,15 @@ class _FormBuilderFilePickerState
                     Container(
                       alignment: Alignment.center,
                       child: (imageFileExts.contains(
-                                  files[index].extension.toLowerCase()) &&
+                                  files[index].extension!.toLowerCase()) &&
                               widget.previewImages)
-                          ? Image.file(File(files[index].path),
+                          ? Image.file(File(files[index].path!),
                               fit: BoxFit.cover)
                           : Container(
                               alignment: Alignment.center,
                               color: theme.primaryColor,
                               child: Icon(
-                                getIconData(files[index].extension),
+                                getIconData(files[index].extension!),
                                 color: Colors.white,
                                 size: 56,
                               ),
@@ -239,7 +239,7 @@ class _FormBuilderFilePickerState
                       width: double.infinity,
                       color: Colors.white.withOpacity(.8),
                       child: Text(
-                        files[index].name,
+                        files[index].name!,
                         style: theme.textTheme.caption,
                         maxLines: 2,
                         overflow: TextOverflow.clip,

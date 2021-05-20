@@ -41,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 name: 'images',
                 decoration: InputDecoration(labelText: 'Attachments'),
                 maxFiles: null,
+                allowMultiple: true,
                 previewImages: true,
                 onChanged: (val) => print(val),
                 selector: Row(
@@ -57,8 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 child: Text('Submit'),
                 onPressed: () {
-                  _formKey.currentState.save();
-                  print(_formKey.currentState.value);
+                  _formKey.currentState!.save();
+                  print(_formKey.currentState!.value);
                 },
               ),
             ],
