@@ -158,7 +158,7 @@ class _FormBuilderFilePickerState
         resultList = await FilePicker.platform.pickFiles(
           type: widget.type,
           allowedExtensions: widget.allowedExtensions,
-          allowCompression: widget.allowCompression,
+          allowCompression: widget.allowCompression ?? true,
           onFileLoading: widget.onFileLoading,
           allowMultiple: widget.allowMultiple,
           withData: widget.withData,
@@ -239,7 +239,7 @@ class _FormBuilderFilePickerState
                       width: double.infinity,
                       color: Colors.white.withOpacity(.8),
                       child: Text(
-                        files[index].name!,
+                        files[index].name,
                         style: theme.textTheme.caption,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
