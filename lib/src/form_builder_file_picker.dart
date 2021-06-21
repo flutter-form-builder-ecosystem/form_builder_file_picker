@@ -10,7 +10,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// Field for image(s) from user device storage
-class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
+class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>?> {
   /// Maximum number of files needed for this field
   final int? maxFiles;
 
@@ -95,7 +95,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       if (maxFiles != null)
-                        Text('${state._files!.length} / $maxFiles'),
+                        Text('${state._files.length} / $maxFiles'),
                       InkWell(
                         onTap: state.enabled &&
                                 (null == state._remainingItemCount ||
@@ -139,10 +139,10 @@ class _FormBuilderFilePickerState
     'wbmp',
   ];
 
-  List<PlatformFile>? _files;
+  List<PlatformFile> _files = [];
 
   int? get _remainingItemCount =>
-      widget.maxFiles == null ? null : widget.maxFiles! - _files!.length;
+      widget.maxFiles == null ? null : widget.maxFiles! - _files.length;
 
   @override
   void initState() {
@@ -176,7 +176,7 @@ class _FormBuilderFilePickerState
     if (!mounted) return;
 
     if (resultList != null) {
-      setState(() => _files!.addAll(resultList!.files));
+      setState(() => _files.addAll(resultList!.files));
       // TODO: Pick only remaining number
       field.didChange(_files);
       widget.onChanged?.call(_files);
@@ -185,7 +185,7 @@ class _FormBuilderFilePickerState
 
   void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>?> field) {
     setState(() {
-      _files!.removeAt(index);
+      _files.removeAt(index);
     });
     field.didChange(_files);
     widget.onChanged?.call(_files);

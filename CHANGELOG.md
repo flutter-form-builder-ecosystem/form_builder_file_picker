@@ -1,3 +1,6 @@
+## [1.2.0-nullsafety.2] - 21-Jun-2021.
+* more null-safety fixes
+
 ## [1.2.0-nullsafety.1] - 21-Jun-2021.
 * Upgraded packages - fix null-safety issues
 
