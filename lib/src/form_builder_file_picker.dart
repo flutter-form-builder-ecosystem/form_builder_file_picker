@@ -192,7 +192,7 @@ class _FormBuilderFilePickerState
   }
 
   Widget defaultFileViewer(
-      List<PlatformFile>? files, FormFieldState<List<PlatformFile>?> field) {
+      List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
     final theme = Theme.of(context);
 
     return LayoutBuilder(
@@ -208,7 +208,7 @@ class _FormBuilderFilePickerState
           runSpacing: 10,
           spacing: 10,
           children: List.generate(
-            files!.length,
+            files.length,
             (index) {
               return Container(
                 height: itemSize,
@@ -239,7 +239,7 @@ class _FormBuilderFilePickerState
                       width: double.infinity,
                       color: Colors.white.withOpacity(.8),
                       child: Text(
-                        files[index].name,
+                        '${files[index].name}',
                         style: theme.textTheme.caption,
                         maxLines: 2,
                         overflow: TextOverflow.clip,

@@ -1,3 +1,6 @@
+## [1.2.0-nullsafety.3] - 21-Jun-2021.
+* Fixed null safety issue on file-viewer
+
 ## [1.2.0-nullsafety.2] - 21-Jun-2021.
 * more null-safety fixes
 
