@@ -48,7 +48,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   final void Function(FilePickerStatus)? onFileLoading;
 
   /// Whether to allow file compression
-  final bool? allowCompression;
+  final bool allowCompression;
 
   /// If [withData] is set, picked files will have its byte data immediately available on memory as [Uint8List]
   /// which can be useful if you are picking it for server upload or similar.
@@ -87,7 +87,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.type = FileType.any,
     this.allowedExtensions,
     this.onFileLoading,
-    this.allowCompression,
+    this.allowCompression = false,
     this.customFileViewerBuilder,
   }) : super(
           key: key,
