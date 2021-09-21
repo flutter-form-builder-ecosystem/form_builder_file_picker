@@ -1,4 +1,7 @@
-## [1.2.0-nullsafety.3] - 21-Jun-2021.
+## [2.0.0-alpha.0] - 21-Jun-2021.
+* Started integration with FormBuilder 7.*
+
+## [1.2.0-nullsafety.3] - 18-Sep-2021.
 * Fixed null safety issue on file-viewer
 
 ## [1.2.0-nullsafety.2] - 21-Jun-2021.

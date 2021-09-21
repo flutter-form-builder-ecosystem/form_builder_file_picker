@@ -10,7 +10,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// Field for image(s) from user device storage
-class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>?> {
+class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Maximum number of files needed for this field
   final int? maxFiles;
 
@@ -52,7 +52,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>?> {
     Key? key,
     required String name,
     FormFieldValidator<List<PlatformFile>>? validator,
-    List<PlatformFile>? initialValue,
+    List<PlatformFile> initialValue = const [],
     InputDecoration decoration = const InputDecoration(),
     ValueChanged<List<PlatformFile>?>? onChanged,
     ValueTransformer<List<PlatformFile>?>? valueTransformer,
@@ -88,7 +88,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>?> {
             final state = field as _FormBuilderFilePickerState;
 
             return InputDecorator(
-              decoration: state.decoration(),
+              decoration: state.decoration,
               child: Column(
                 children: <Widget>[
                   Row(
@@ -176,7 +176,7 @@ class _FormBuilderFilePickerState
     if (!mounted) return;
 
     if (resultList != null) {
-      setState(() => _files.addAll(resultList!.files));
+      setState(() => _files = [..._files, ...resultList!.files]);
       // TODO: Pick only remaining number
       field.didChange(_files);
       widget.onChanged?.call(_files);
@@ -184,9 +184,7 @@ class _FormBuilderFilePickerState
   }
 
   void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>?> field) {
-    setState(() {
-      _files.removeAt(index);
-    });
+    setState(() => _files.removeAt(index));
     field.didChange(_files);
     widget.onChanged?.call(_files);
   }
@@ -239,7 +237,7 @@ class _FormBuilderFilePickerState
                       width: double.infinity,
                       color: Colors.white.withOpacity(.8),
                       child: Text(
-                        '${files[index].name}',
+                        files[index].name,
                         style: theme.textTheme.caption,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
