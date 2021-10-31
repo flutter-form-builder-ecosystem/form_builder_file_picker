@@ -10,9 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_form_builder: ^6.0.0
-  file_picker: ^3.0.2
-  permission_handler: ^6.1.1
+  flutter_form_builder: ^6.0.1
+  file_picker: ^4.2.0
+  permission_handler: ^8.2.5
   community_material_icon: ^5.9.55
 
 dev_dependencies:
