@@ -106,7 +106,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
             final state = field as _FormBuilderFilePickerState;
 
             return InputDecorator(
-              decoration: state.decoration(),
+              decoration: decoration,
               child: Column(
                 children: <Widget>[
                   Row(
@@ -179,7 +179,7 @@ class _FormBuilderFilePickerState
         resultList = await FilePicker.platform.pickFiles(
           type: widget.type,
           allowedExtensions: widget.allowedExtensions,
-          allowCompression: widget.allowCompression,
+          allowCompression: widget.allowCompression ?? true,
           onFileLoading: widget.onFileLoading,
           allowMultiple: widget.allowMultiple,
           withData: widget.withData,
@@ -200,7 +200,6 @@ class _FormBuilderFilePickerState
       setState(() => _files!.addAll(resultList!.files));
       // TODO: Pick only remaining number
       field.didChange(_files);
-      widget.onChanged?.call(_files);
     }
   }
 
@@ -218,7 +217,6 @@ class _FormBuilderFilePickerState
       _files!.removeAt(index);
     });
     field.didChange(_files);
-    widget.onChanged?.call(_files);
   }
 
   Widget defaultFileViewer(
@@ -269,7 +267,7 @@ class _FormBuilderFilePickerState
                       width: double.infinity,
                       color: Colors.white.withOpacity(.8),
                       child: Text(
-                        files[index].name!,
+                        files[index].name,
                         style: theme.textTheme.caption,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
