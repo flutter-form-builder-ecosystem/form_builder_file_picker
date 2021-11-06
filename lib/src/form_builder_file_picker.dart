@@ -179,7 +179,6 @@ class _FormBuilderFilePickerState
       setState(() => _files!.addAll(resultList!.files));
       // TODO: Pick only remaining number
       field.didChange(_files);
-      widget.onChanged?.call(_files);
     }
   }
 
@@ -188,7 +187,6 @@ class _FormBuilderFilePickerState
       _files!.removeAt(index);
     });
     field.didChange(_files);
-    widget.onChanged?.call(_files);
   }
 
   Widget defaultFileViewer(
