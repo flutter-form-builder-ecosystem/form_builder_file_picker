@@ -1,3 +1,6 @@
+## [2.0.0] - 06-Nov-2021.
+* Support for FormBuilder 7.*
+
 ## [2.0.0-alpha.0] - 21-Jun-2021.
 * Started integration with FormBuilder 7.*
 
