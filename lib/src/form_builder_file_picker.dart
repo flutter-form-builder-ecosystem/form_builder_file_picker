@@ -22,7 +22,7 @@ typedef FileViewerBuilder = Widget Function(
 );
 
 /// Field for image(s) from user device storage
-class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>?> {
+class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Maximum number of files needed for this field
   final int? maxFiles;
 
@@ -128,7 +128,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>?> {
                   customFileViewerBuilder != null
                       ? customFileViewerBuilder.call(state._files,
                           (files) => state._setFiles(files ?? [], field))
-                      : state.defaultFileViewer(state._files, field),
+                      : state.defaultFileViewer(state._files, field as FormFieldState<List<PlatformFile>>),
                 ],
               ),
             );
@@ -212,15 +212,13 @@ class _FormBuilderFilePickerState
     widget.onChanged?.call(_files);
   }
 
-  void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>?> field) {
-    setState(() {
-      _files.removeAt(index);
-    });
+  void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>> field) {
+    setState(() => _files.removeAt(index));
     field.didChange(_files);
   }
 
   Widget defaultFileViewer(
-      List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
+      List<PlatformFile> files, FormFieldState<List<PlatformFile>> field) {
     final theme = Theme.of(context);
 
     return LayoutBuilder(
@@ -267,7 +265,7 @@ class _FormBuilderFilePickerState
                       width: double.infinity,
                       color: Colors.white.withOpacity(.8),
                       child: Text(
-                        '${files[index].name}',
+                        files[index].name,
                         style: theme.textTheme.caption,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
