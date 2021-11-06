@@ -87,7 +87,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.type = FileType.any,
     this.allowedExtensions,
     this.onFileLoading,
-    this.allowCompression = false,
+    this.allowCompression = true,
     this.customFileViewerBuilder,
   }) : super(
           key: key,
@@ -129,7 +129,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                       ? customFileViewerBuilder.call(state._files,
                           (files) => state._setFiles(files ?? [], field))
                       : state.defaultFileViewer(state._files,
-                          field as FormFieldState<List<PlatformFile>>),
+                          (files) => state._setFiles(files ?? [], field)),
                 ],
               ),
             );
@@ -206,11 +206,8 @@ class _FormBuilderFilePickerState
 
   void _setFiles(
       List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
-    setState(() {
-      _files = files;
-    });
+    setState(() => _files = files);
     field.didChange(_files);
-    widget.onChanged?.call(_files);
   }
 
   void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>> field) {
@@ -219,7 +216,7 @@ class _FormBuilderFilePickerState
   }
 
   Widget defaultFileViewer(
-      List<PlatformFile> files, FormFieldState<List<PlatformFile>> field) {
+      List<PlatformFile> files, FormFieldSetter<List<PlatformFile>> setter) {
     final theme = Theme.of(context);
 
     return LayoutBuilder(
@@ -277,7 +274,10 @@ class _FormBuilderFilePickerState
                         top: 0,
                         right: 0,
                         child: InkWell(
-                          onTap: () => removeFileAtIndex(index, field),
+                          onTap: () {
+                            files.removeAt(index);
+                            setter.call([...files]);
+                          },
                           child: Container(
                             margin: const EdgeInsets.all(3),
                             decoration: BoxDecoration(
