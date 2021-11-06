@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,12 +14,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -30,45 +34,45 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FormBuilder FilePicker Example'),
+        title: const Text('FormBuilder FilePicker Example'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: FormBuilder(
           key: _formKey,
           child: Column(
             children: <Widget>[
               FormBuilderFilePicker(
                 name: 'images',
-                decoration: InputDecoration(labelText: 'Attachments'),
+                decoration: const InputDecoration(labelText: 'Attachments'),
                 maxFiles: null,
                 allowMultiple: true,
                 previewImages: true,
-                onChanged: (val) => print(val),
+                onChanged: (val) => debugPrint(val.toString()),
                 selector: Row(
-                  children: <Widget>[
+                  children: const <Widget>[
                     Icon(Icons.file_upload),
                     Text('Upload'),
                   ],
                 ),
                 onFileLoading: (val) {
-                  print(val);
+                  debugPrint(val.toString());
                 },
                 customFileViewerBuilder:
                     _useCustomFileViewer ? customFileViewerBuilder : null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                     onPressed: () {
                       _formKey.currentState!.save();
-                      print(_formKey.currentState!.value);
+                      debugPrint(_formKey.currentState!.value.toString());
                     },
                   ),
-                  Spacer(),
+                  const Spacer(),
                   ElevatedButton(
                     child: Text(_useCustomFileViewer
                         ? 'Use Default File Viewer'
@@ -96,9 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
       itemBuilder: (context, index) {
         final file = files![index];
         return ListTile(
-          title: Text(file.name!),
+          title: Text(file.name),
           trailing: IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               files.removeAt(index);
               setter.call([...files]);
@@ -106,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         );
       },
-      separatorBuilder: (context, index) => Divider(
+      separatorBuilder: (context, index) => const Divider(
         color: Colors.blueAccent,
       ),
       itemCount: files!.length,

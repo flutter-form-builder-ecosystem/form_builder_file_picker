@@ -128,7 +128,8 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                   customFileViewerBuilder != null
                       ? customFileViewerBuilder.call(state._files,
                           (files) => state._setFiles(files ?? [], field))
-                      : state.defaultFileViewer(state._files, field as FormFieldState<List<PlatformFile>>),
+                      : state.defaultFileViewer(state._files,
+                          field as FormFieldState<List<PlatformFile>>),
                 ],
               ),
             );
