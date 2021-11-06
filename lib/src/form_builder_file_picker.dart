@@ -9,6 +9,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Signature of a function to build a custom file viewer [Widget] for
+/// [FormBuilderFilePicker].
+///
+/// The specified [files] are the [PlatformFile] objects currently picked
+/// by the [FormBuilderFilePicker].
+///
+/// [filesSetter] can be used to update the value of [FormBuilderFilePicker].
+typedef FileViewerBuilder = Widget Function(
+  List<PlatformFile>? files,
+  FormFieldSetter<List<PlatformFile>> filesSetter,
+);
+
 /// Field for image(s) from user device storage
 class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Maximum number of files needed for this field
@@ -46,6 +58,11 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// which can be useful for uploading and processing large files.
   final bool withReadStream;
 
+  /// If specified, the return value of this callback will be used to render the file viewer for the picked files.
+  /// Specifying this callback can be useful to customize the look and feel of the file viewer, as well as
+  /// to support user interactions with the picked files.
+  final FileViewerBuilder? customFileViewerBuilder;
+
   /// Creates field for image(s) from user device storage
   FormBuilderFilePicker({
     //From Super
@@ -71,6 +88,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.allowedExtensions,
     this.onFileLoading,
     this.allowCompression = true,
+    this.customFileViewerBuilder,
   }) : super(
           key: key,
           initialValue: initialValue,
@@ -88,7 +106,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
             final state = field as _FormBuilderFilePickerState;
 
             return InputDecorator(
-              decoration: state.decoration,
+              decoration: decoration,
               child: Column(
                 children: <Widget>[
                   Row(
@@ -107,7 +125,11 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                     ],
                   ),
                   const SizedBox(height: 3),
-                  state.defaultFileViewer(state._files, field),
+                  customFileViewerBuilder != null
+                      ? customFileViewerBuilder.call(state._files,
+                          (files) => state._setFiles(files ?? [], field))
+                      : state.defaultFileViewer(state._files,
+                          (files) => state._setFiles(files ?? [], field)),
                 ],
               ),
             );
@@ -179,18 +201,22 @@ class _FormBuilderFilePickerState
       setState(() => _files = [..._files, ...resultList!.files]);
       // TODO: Pick only remaining number
       field.didChange(_files);
-      widget.onChanged?.call(_files);
     }
   }
 
-  void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>?> field) {
+  void _setFiles(
+      List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
+    setState(() => _files = files);
+    field.didChange(_files);
+  }
+
+  void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>> field) {
     setState(() => _files.removeAt(index));
     field.didChange(_files);
-    widget.onChanged?.call(_files);
   }
 
   Widget defaultFileViewer(
-      List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
+      List<PlatformFile> files, FormFieldSetter<List<PlatformFile>> setter) {
     final theme = Theme.of(context);
 
     return LayoutBuilder(
@@ -248,7 +274,10 @@ class _FormBuilderFilePickerState
                         top: 0,
                         right: 0,
                         child: InkWell(
-                          onTap: () => removeFileAtIndex(index, field),
+                          onTap: () {
+                            files.removeAt(index);
+                            setter.call([...files]);
+                          },
                           child: Container(
                             margin: const EdgeInsets.all(3),
                             decoration: BoxDecoration(

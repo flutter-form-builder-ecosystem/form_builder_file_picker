@@ -26,6 +26,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormBuilderState>();
+  bool _useCustomFileViewer = true;
 
   @override
   Widget build(BuildContext context) {
@@ -55,19 +56,62 @@ class _MyHomePageState extends State<MyHomePage> {
                 onFileLoading: (val) {
                   debugPrint(val.toString());
                 },
+                customFileViewerBuilder:
+                    _useCustomFileViewer ? customFileViewerBuilder : null,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                child: const Text('Submit'),
-                onPressed: () {
-                  _formKey.currentState!.save();
-                  debugPrint(_formKey.currentState!.value.toString());
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    child: const Text('Submit'),
+                    onPressed: () {
+                      _formKey.currentState!.save();
+                      debugPrint(_formKey.currentState!.value.toString());
+                    },
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    child: Text(_useCustomFileViewer
+                        ? 'Use Default File Viewer'
+                        : 'Use Custom File Viewer'),
+                    onPressed: () {
+                      setState(
+                          () => _useCustomFileViewer = !_useCustomFileViewer);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget customFileViewerBuilder(
+    List<PlatformFile>? files,
+    FormFieldSetter<List<PlatformFile>> setter,
+  ) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        final file = files![index];
+        return ListTile(
+          title: Text(file.name),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              files.removeAt(index);
+              setter.call([...files]);
+            },
+          ),
+        );
+      },
+      separatorBuilder: (context, index) => const Divider(
+        color: Colors.blueAccent,
+      ),
+      itemCount: files!.length,
     );
   }
 }
