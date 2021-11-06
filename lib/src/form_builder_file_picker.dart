@@ -9,6 +9,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Signature of a function to build a custom file viewer [Widget] for
+/// [FormBuilderFilePicker].
+///
+/// The specified [files] are the [PlatformFile] objects currently picked
+/// by the [FormBuilderFilePicker].
+///
+/// [filesSetter] can be used to update the value of [FormBuilderFilePicker].
+typedef FileViewerBuilder = Widget Function(
+  List<PlatformFile>? files,
+  FormFieldSetter<List<PlatformFile>> filesSetter,
+);
+
 /// Field for image(s) from user device storage
 class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Maximum number of files needed for this field
@@ -36,7 +48,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   final void Function(FilePickerStatus)? onFileLoading;
 
   /// Whether to allow file compression
-  final bool? allowCompression;
+  final bool allowCompression;
 
   /// If [withData] is set, picked files will have its byte data immediately available on memory as [Uint8List]
   /// which can be useful if you are picking it for server upload or similar.
@@ -45,6 +57,11 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// If [withReadStream] is set, picked files will have its byte data available as a [Stream<List<int>>]
   /// which can be useful for uploading and processing large files.
   final bool withReadStream;
+
+  /// If specified, the return value of this callback will be used to render the file viewer for the picked files.
+  /// Specifying this callback can be useful to customize the look and feel of the file viewer, as well as
+  /// to support user interactions with the picked files.
+  final FileViewerBuilder? customFileViewerBuilder;
 
   /// Creates field for image(s) from user device storage
   FormBuilderFilePicker({
@@ -70,7 +87,8 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.type = FileType.any,
     this.allowedExtensions,
     this.onFileLoading,
-    this.allowCompression,
+    this.allowCompression = false,
+    this.customFileViewerBuilder,
   }) : super(
           key: key,
           initialValue: initialValue,
@@ -107,7 +125,10 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                     ],
                   ),
                   const SizedBox(height: 3),
-                  state.defaultFileViewer(state._files, field),
+                  customFileViewerBuilder != null
+                      ? customFileViewerBuilder.call(state._files,
+                          (files) => state._setFiles(files ?? [], field))
+                      : state.defaultFileViewer(state._files, field),
                 ],
               ),
             );
@@ -180,6 +201,15 @@ class _FormBuilderFilePickerState
       // TODO: Pick only remaining number
       field.didChange(_files);
     }
+  }
+
+  void _setFiles(
+      List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
+    setState(() {
+      _files = files;
+    });
+    field.didChange(_files);
+    widget.onChanged?.call(_files);
   }
 
   void removeFileAtIndex(int index, FormFieldState<List<PlatformFile>?> field) {
