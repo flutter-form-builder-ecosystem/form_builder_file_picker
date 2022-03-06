@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -176,7 +177,7 @@ class _FormBuilderFilePickerState
     FilePickerResult? resultList;
 
     try {
-      if (await Permission.storage.request().isGranted) {
+      if (kIsWeb || await Permission.storage.request().isGranted) {
         resultList = await FilePicker.platform.pickFiles(
           type: widget.type,
           allowedExtensions: widget.allowedExtensions,
