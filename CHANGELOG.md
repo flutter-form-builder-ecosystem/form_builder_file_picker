@@ -1,3 +1,6 @@
+## [2.1.0] - 06-Mar-2022.
+* Added support for web platform
+
 ## [2.0.0] - 06-Nov-2021.
 * Support for FormBuilder 7.*
 
