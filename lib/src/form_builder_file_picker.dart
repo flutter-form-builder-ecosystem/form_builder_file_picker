@@ -136,7 +136,8 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
         );
 
   @override
-  _FormBuilderFilePickerState createState() => _FormBuilderFilePickerState();
+  FormBuilderFieldState<FormBuilderFilePicker, List<PlatformFile>>
+      createState() => _FormBuilderFilePickerState();
 }
 
 class _FormBuilderFilePickerState
