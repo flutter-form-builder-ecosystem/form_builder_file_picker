@@ -1,3 +1,7 @@
+## [2.2.0] - 20-Jun-2022.
+* Improvements to Web support
+* Fix issue where errorText not showing
+
 ## [2.1.0] - 06-Mar-2022.
 * Added support for web platform
 

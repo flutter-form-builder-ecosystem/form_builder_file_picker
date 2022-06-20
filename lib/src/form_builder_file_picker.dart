@@ -111,9 +111,12 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      if (maxFiles != null) Text('${state._files.length} / $maxFiles'),
+                      if (maxFiles != null)
+                        Text('${state._files.length} / $maxFiles'),
                       InkWell(
-                        onTap: state.enabled && (null == state._remainingItemCount || state._remainingItemCount! > 0)
+                        onTap: state.enabled &&
+                                (null == state._remainingItemCount ||
+                                    state._remainingItemCount! > 0)
                             ? () => state.pickFiles(field)
                             : null,
                         child: selector,
@@ -122,8 +125,10 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                   ),
                   const SizedBox(height: 3),
                   customFileViewerBuilder != null
-                      ? customFileViewerBuilder.call(state._files, (files) => state._setFiles(files ?? [], field))
-                      : state.defaultFileViewer(state._files, (files) => state._setFiles(files ?? [], field)),
+                      ? customFileViewerBuilder.call(state._files,
+                          (files) => state._setFiles(files ?? [], field))
+                      : state.defaultFileViewer(state._files,
+                          (files) => state._setFiles(files ?? [], field)),
                 ],
               ),
             );
@@ -135,7 +140,8 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
       createState() => _FormBuilderFilePickerState();
 }
 
-class _FormBuilderFilePickerState extends FormBuilderFieldState<FormBuilderFilePicker, List<PlatformFile>> {
+class _FormBuilderFilePickerState
+    extends FormBuilderFieldState<FormBuilderFilePicker, List<PlatformFile>> {
   /// Image File Extensions.
   ///
   /// Note that images may be previewed.
@@ -157,7 +163,8 @@ class _FormBuilderFilePickerState extends FormBuilderFieldState<FormBuilderFileP
 
   List<PlatformFile> _files = [];
 
-  int? get _remainingItemCount => widget.maxFiles == null ? null : widget.maxFiles! - _files.length;
+  int? get _remainingItemCount =>
+      widget.maxFiles == null ? null : widget.maxFiles! - _files.length;
 
   @override
   void initState() {
@@ -197,7 +204,8 @@ class _FormBuilderFilePickerState extends FormBuilderFieldState<FormBuilderFileP
     }
   }
 
-  void _setFiles(List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
+  void _setFiles(
+      List<PlatformFile> files, FormFieldState<List<PlatformFile>?> field) {
     setState(() => _files = files);
     field.didChange(_files);
   }
@@ -207,14 +215,16 @@ class _FormBuilderFilePickerState extends FormBuilderFieldState<FormBuilderFileP
     field.didChange(_files);
   }
 
-  Widget defaultFileViewer(List<PlatformFile> files, FormFieldSetter<List<PlatformFile>> setter) {
+  Widget defaultFileViewer(
+      List<PlatformFile> files, FormFieldSetter<List<PlatformFile>> setter) {
     final theme = Theme.of(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         const count = 3;
         const spacing = 10;
-        final itemSize = (constraints.biggest.width - (count * spacing)) / count;
+        final itemSize =
+            (constraints.biggest.width - (count * spacing)) / count;
         return Wrap(
           // scrollDirection: Axis.horizontal,
           alignment: WrapAlignment.start,
@@ -233,10 +243,14 @@ class _FormBuilderFilePickerState extends FormBuilderFieldState<FormBuilderFileP
                   children: <Widget>[
                     Container(
                       alignment: Alignment.center,
-                      child: (imageFileExts.contains(files[index].extension!.toLowerCase()) && widget.previewImages)
+                      child: (imageFileExts.contains(
+                                  files[index].extension!.toLowerCase()) &&
+                              widget.previewImages)
                           ? kIsWeb
-                              ? Image.memory(files[index].bytes!, fit: BoxFit.cover)
-                              : Image.file(File(files[index].path!), fit: BoxFit.cover)
+                              ? Image.memory(files[index].bytes!,
+                                  fit: BoxFit.cover)
+                              : Image.file(File(files[index].path!),
+                                  fit: BoxFit.cover)
                           : Container(
                               alignment: Alignment.center,
                               color: theme.primaryColor,
