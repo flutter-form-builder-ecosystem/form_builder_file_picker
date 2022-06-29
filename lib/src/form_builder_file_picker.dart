@@ -105,14 +105,15 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
             final state = field as _FormBuilderFilePickerState;
 
             return InputDecorator(
-              decoration: state.decoration,
+              decoration: state.decoration.copyWith(
+                  counterText: maxFiles != null
+                      ? '${state._files.length} / $maxFiles'
+                      : null),
               child: Column(
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      if (maxFiles != null)
-                        Text('${state._files.length} / $maxFiles'),
                       InkWell(
                         onTap: state.enabled &&
                                 (null == state._remainingItemCount ||
