@@ -118,14 +118,15 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                 typeSelectors ?? [TypeSelector(type: type, selector: selector)];
 
             return InputDecorator(
-              decoration: state.decoration,
+              decoration: state.decoration.copyWith(
+                  counterText: maxFiles != null
+                      ? '${state._files.length} / $maxFiles'
+                      : null),
               child: Column(
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      if (maxFiles != null)
-                        Text('${state._files.length} / $maxFiles'),
                       ..._typeSelectors.map(
                         (typeSelector) => InkWell(
                           onTap: state.enabled &&
