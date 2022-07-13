@@ -1,4 +1,9 @@
-# form_builder_file_picker
+# Form Builder File Picker
+
+[![Pub Version](https://img.shields.io/pub/v/form_builder_file_picker?logo=flutter&style=for-the-badge)](https://pub.dev/packages/form_builder_file_picker)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/flutter-form-builder-ecosystem/form_builder_file_picker/Base?logo=github&style=for-the-badge)](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/actions/workflows/base.yaml)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/flutter-form-builder-ecosystem/form_builder_file_picker?logo=codefactor&style=for-the-badge)](https://www.codefactor.io/repository/github/flutter-form-builder-ecosystem/form_builder_file_picker)
+[![Codecov](https://img.shields.io/codecov/c/github/flutter-form-builder-ecosystem/form_builder_file_picker?logo=codecov&style=for-the-badge)](https://codecov.io/gh/flutter-form-builder-ecosystem/form_builder_file_picker/)
 
 File Picker Field for [flutter_form_builder](https://pub.dev/packages/flutter_form_builder) package
 
@@ -29,3 +34,11 @@ Since this package makes use of [file_picker package](https://pub.dev/packages/f
     },
   ),
 ```
+
+## Credits
+
+<a href="https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=flutter-form-builder-ecosystem/form_builder_file_picker" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
