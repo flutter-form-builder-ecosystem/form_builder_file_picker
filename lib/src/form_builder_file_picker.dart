@@ -20,6 +20,13 @@ typedef FileViewerBuilder = Widget Function(
   FormFieldSetter<List<PlatformFile>> filesSetter,
 );
 
+class TypeSelector {
+  final FileType type;
+  final Widget selector;
+
+  TypeSelector({required this.type, required this.selector});
+}
+
 /// Field for image(s) from user device storage
 class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Maximum number of files needed for this field
@@ -34,6 +41,8 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
 
   /// Widget to be tapped on by user in order to pick files
   final Widget selector;
+
+  final List<TypeSelector>? typeSelectors;
 
   /// Default types of files to be picked. Default set to [FileType.any]
   final FileType type;
@@ -84,6 +93,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.previewImages = true,
     this.selector = const Icon(Icons.add_circle),
     this.type = FileType.any,
+    this.typeSelectors,
     this.allowedExtensions,
     this.onFileLoading,
     this.allowCompression = true,
@@ -104,6 +114,9 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
           builder: (FormFieldState<List<PlatformFile>?> field) {
             final state = field as _FormBuilderFilePickerState;
 
+            List<TypeSelector> typeSelectorList =
+                typeSelectors ?? [TypeSelector(type: type, selector: selector)];
+
             return InputDecorator(
               decoration: state.decoration.copyWith(
                   counterText: maxFiles != null
@@ -114,13 +127,15 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      InkWell(
-                        onTap: state.enabled &&
-                                (null == state._remainingItemCount ||
-                                    state._remainingItemCount! > 0)
-                            ? () => state.pickFiles(field)
-                            : null,
-                        child: selector,
+                      ...typeSelectorList.map(
+                        (typeSelector) => InkWell(
+                          onTap: state.enabled &&
+                                  (null == state._remainingItemCount ||
+                                      state._remainingItemCount! > 0)
+                              ? () => state.pickFiles(field, typeSelector.type)
+                              : null,
+                          child: typeSelector.selector,
+                        ),
                       ),
                     ],
                   ),
@@ -173,13 +188,14 @@ class _FormBuilderFilePickerState
     _files = widget.initialValue ?? [];
   }
 
-  Future<void> pickFiles(FormFieldState<List<PlatformFile>?> field) async {
+  Future<void> pickFiles(
+      FormFieldState<List<PlatformFile>?> field, FileType fileType) async {
     FilePickerResult? resultList;
 
     try {
       if (kIsWeb || await Permission.storage.request().isGranted) {
         resultList = await FilePicker.platform.pickFiles(
-          type: widget.type,
+          type: fileType,
           allowedExtensions: widget.allowedExtensions,
           allowCompression: widget.allowCompression,
           onFileLoading: widget.onFileLoading,
