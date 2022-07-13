@@ -114,7 +114,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
           builder: (FormFieldState<List<PlatformFile>?> field) {
             final state = field as _FormBuilderFilePickerState;
 
-            List<TypeSelector> _typeSelectors =
+            List<TypeSelector> typeSelectorList =
                 typeSelectors ?? [TypeSelector(type: type, selector: selector)];
 
             return InputDecorator(
@@ -127,7 +127,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      ..._typeSelectors.map(
+                      ...typeSelectorList.map(
                         (typeSelector) => InkWell(
                           onTap: state.enabled &&
                                   (null == state._remainingItemCount ||
