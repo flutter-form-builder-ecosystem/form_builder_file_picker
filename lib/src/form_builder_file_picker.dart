@@ -24,7 +24,7 @@ class TypeSelector {
   final FileType type;
   final Widget selector;
 
-  TypeSelector({required this.type, required this.selector});
+  const TypeSelector({required this.type, required this.selector});
 }
 
 /// Field for image(s) from user device storage
@@ -91,8 +91,13 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.withReadStream = false,
     this.allowMultiple = false,
     this.previewImages = true,
-    this.selector = const Icon(Icons.add_circle),
-    this.type = FileType.any,
+    @Deprecated("please use typeSelectors for better picker and file type control")
+        this.selector = const Icon(Icons.add_circle),
+    @Deprecated("please use typeSelectors for better picker and file type control")
+        this.type = FileType.any,
+    // TODO: once the above fields are removed typeSelectors should be made not null and initialized as
+    // const [TypeSelector(type: FileType.any, selector: Icon(Icons.add_circle))]
+    // the typeSelectorList variable can be then removed and we can use typeSelectors directly
     this.typeSelectors,
     this.allowedExtensions,
     this.onFileLoading,
