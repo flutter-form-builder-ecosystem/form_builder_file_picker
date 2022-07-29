@@ -1,17 +1,40 @@
 # Form Builder File Picker
 
+File Picker Field for [flutter_form_builder](https://pub.dev/packages/flutter_form_builder) package
+
 [![Pub Version](https://img.shields.io/pub/v/form_builder_file_picker?logo=flutter&style=for-the-badge)](https://pub.dev/packages/form_builder_file_picker)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/flutter-form-builder-ecosystem/form_builder_file_picker/Base?logo=github&style=for-the-badge)](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/actions/workflows/base.yaml)
 [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/flutter-form-builder-ecosystem/form_builder_file_picker?logo=codefactor&style=for-the-badge)](https://www.codefactor.io/repository/github/flutter-form-builder-ecosystem/form_builder_file_picker)
 [![Codecov](https://img.shields.io/codecov/c/github/flutter-form-builder-ecosystem/form_builder_file_picker?logo=codecov&style=for-the-badge)](https://codecov.io/gh/flutter-form-builder-ecosystem/form_builder_file_picker/)
+[![Discord](https://img.shields.io/discord/985922433578053673?logo=discord&style=for-the-badge)](https://discord.com/invite/25KNPMJQf2)
+___
 
-File Picker Field for [flutter_form_builder](https://pub.dev/packages/flutter_form_builder) package
+- [Features](#features)
+- [Use](#use)
+    - [Setup](#setup)
+    - [Basic use](#basic-use)
+    - [Especific uses](#especific-uses)
+- [Support](#support)
+    - [Contribute](#contribute)
+    - [Questions and answers](#questions-and-answers)
+    - [Donations](#donations)
+- [Roadmap](#roadmap)
+- [Ecosystem](#ecosystem)
+- [Thanks to](#thanks-to)
+    - [Contributors](#contributors)
 
-# Setup
+## Features
 
-Since this package makes use of [file_picker package](https://pub.dev/packages/file_picker), for platform specific setup, follow the instructions [here](https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup)
+- Automatic handle permissions
+- Show images preview
 
-# Usage
+## Use
+
+### Setup
+
+Since this package makes use of [file_picker](https://pub.dev/packages/file_picker) package, for platform specific setup follow [this instructions](https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup)
+
+### Basic use
 
 ```dart
  import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -23,21 +46,30 @@ Since this package makes use of [file_picker package](https://pub.dev/packages/f
     maxFiles: null,
     previewImages: true,
     onChanged: (val) => print(val),
-    selector: Row(
-      children: <Widget>[
-        Icon(Icons.file_upload),
-        Text('Upload'),
-      ],
-    ),
+    typeSelectors: [
+      TypeSelector(
+        type: FileType.any,
+        selector: Row(
+          children: <Widget>[
+            Icon(Icons.add_circle),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text("Add documents"),
+            ),
+          ],
+        ),
+      ),
+    ],
     onFileLoading: (val) {
       print(val);
     },
   ),
 ```
 
-On mobile platforms the file picker will open a default document picker if used with FileType.any. 
-If you want to be able to pick documents and images in the same form field you will need to define
-different file types and thus different selectors. To achieve this use the typeSelectors parameter:
+### Especific uses
+
+On mobile platforms the file picker will open a default document picker if used with `FileType.any`.
+If you want to be able to pick documents and images in the same form field, you will need to define different file types and thus different selectors. To achieve this use the `typeSelectors` parameter.
 This way the user will see two buttons to open a file picker for documents and a file picker for the photos
 gallery.
 
@@ -79,7 +111,40 @@ FormBuilderFilePicker(
   )
 ```
 
-## Credits
+## Support
+
+### Contribute
+
+You have some ways to contribute to this packages
+
+ - Beginner: Reporting bugs or request new features
+ - Intermediate: Implement new features (from issues or not) and created pull requests
+ - Advanced: Join to [organization](#ecosystem) like a member and help coding, manage issues, dicuss new features and other things
+
+ See [contribution file](https://github.com/flutter-form-builder-ecosystem/.github/blob/main/CONTRIBUTING.md) for more details
+
+### Questions and answers
+
+You can join to [our Discord server](https://discord.gg/25KNPMJQf2) or search answers in [StackOverflow](https://stackoverflow.com/questions/tagged/flutter-form-builder)
+
+### Donations
+
+Buy a coffe to [Danvick Miller](https://twitter.com/danvickmiller), creator of this awesome package
+
+[![Buy me a coffee](https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg)](https://www.buymeacoffee.com/danvick)
+
+## Roadmap
+
+- [Add visual examples](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/issues/37) (images, gifs, videos, sample application)
+- [Solve open issues](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/issues), [prioritizing bugs](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/labels/bug)
+
+## Ecosystem
+
+Take a look to [our awesome ecosystem](https://github.com/flutter-form-builder-ecosystem) and all packages in there
+
+## Thanks to
+
+### Contributors
 
 <a href="https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=flutter-form-builder-ecosystem/form_builder_file_picker" />
