@@ -1,3 +1,10 @@
+## [2.3.0] - 14-Jul-2022
+
+* Move maxFiles display into counterText #32 (Thanks @grundid)
+* Add type selector property #31 (Thanks @grundid)
+* Refactor readme
+* Apply license BSD-3-clause
+
 ## [2.2.0] - 20-Jun-2022.
 * Improvements to Web support
 * Fix issue where errorText not showing
