@@ -248,7 +248,6 @@ class _FormBuilderFilePickerState
         final itemSize =
             (constraints.biggest.width - (count * spacing)) / count;
         return Wrap(
-          // scrollDirection: Axis.horizontal,
           alignment: WrapAlignment.start,
           runAlignment: WrapAlignment.start,
           runSpacing: 10,
@@ -351,5 +350,11 @@ class _FormBuilderFilePickerState
       default:
         return Icons.insert_drive_file;
     }
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    setState(() => _files = widget.initialValue ?? []);
   }
 }
