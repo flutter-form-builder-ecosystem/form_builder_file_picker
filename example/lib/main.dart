@@ -85,6 +85,15 @@ class MyHomePageState extends State<MyHomePage> {
                           () => _useCustomFileViewer = !_useCustomFileViewer);
                     },
                   ),
+                  const Spacer(),
+                  ElevatedButton(
+                    child: const Text('Reset'),
+                    onPressed: () {
+                      setState(
+                        () => _formKey.currentState!.reset(),
+                      );
+                    },
+                  ),
                 ],
               ),
             ],
