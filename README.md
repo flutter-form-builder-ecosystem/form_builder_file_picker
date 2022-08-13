@@ -13,7 +13,7 @@ ___
 - [Use](#use)
     - [Setup](#setup)
     - [Basic use](#basic-use)
-    - [Especific uses](#especific-uses)
+    - [Specific uses](#specific-uses)
 - [Support](#support)
     - [Contribute](#contribute)
     - [Questions and answers](#questions-and-answers)
@@ -28,7 +28,7 @@ ___
 - Automatic handle permissions
 - Show images preview
 
-## Use
+## Usage
 
 ### Setup
 
@@ -66,7 +66,7 @@ Since this package makes use of [file_picker](https://pub.dev/packages/file_pick
   ),
 ```
 
-### Especific uses
+### Specific uses
 
 On mobile platforms the file picker will open a default document picker if used with `FileType.any`.
 If you want to be able to pick documents and images in the same form field, you will need to define different file types and thus different selectors. To achieve this use the `typeSelectors` parameter.
@@ -119,9 +119,9 @@ You have some ways to contribute to this packages
 
  - Beginner: Reporting bugs or request new features
  - Intermediate: Implement new features (from issues or not) and created pull requests
- - Advanced: Join to [organization](#ecosystem) like a member and help coding, manage issues, dicuss new features and other things
+ - Advanced: Join the [organization](#ecosystem) like a member and help coding, manage issues, dicuss new features and other things
 
- See [contribution file](https://github.com/flutter-form-builder-ecosystem/.github/blob/main/CONTRIBUTING.md) for more details
+ See [contribution guide](https://github.com/flutter-form-builder-ecosystem/.github/blob/main/CONTRIBUTING.md) for more details
 
 ### Questions and answers
 
