@@ -77,7 +77,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     Key? key,
     required String name,
     FormFieldValidator<List<PlatformFile>>? validator,
-    List<PlatformFile> initialValue = const [],
+    List<PlatformFile>? initialValue,
     InputDecoration decoration = const InputDecoration(),
     ValueChanged<List<PlatformFile>?>? onChanged,
     ValueTransformer<List<PlatformFile>?>? valueTransformer,
@@ -190,7 +190,7 @@ class _FormBuilderFilePickerState
   @override
   void initState() {
     super.initState();
-    _files = widget.initialValue ?? [];
+    _files = initialValue ?? [];
   }
 
   Future<void> pickFiles(
