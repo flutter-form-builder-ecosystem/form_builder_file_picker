@@ -288,7 +288,7 @@ class _FormBuilderFilePickerState
                       color: Colors.white.withOpacity(.8),
                       child: Text(
                         files[index].name,
-                        style: theme.textTheme.caption,
+                        style: theme.textTheme.bodySmall,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
                       ),
