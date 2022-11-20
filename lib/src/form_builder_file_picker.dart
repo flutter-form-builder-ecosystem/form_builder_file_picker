@@ -198,7 +198,10 @@ class _FormBuilderFilePickerState
     FilePickerResult? resultList;
 
     try {
-      if (kIsWeb || await Permission.storage.request().isGranted) {
+      if (kIsWeb ||
+          Platform.isLinux ||
+          Platform.isWindows ||
+          await Permission.storage.request().isGranted) {
         resultList = await FilePicker.platform.pickFiles(
           type: fileType,
           allowedExtensions: widget.allowedExtensions,
