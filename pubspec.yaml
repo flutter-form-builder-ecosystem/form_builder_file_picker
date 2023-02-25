@@ -3,6 +3,8 @@ description: FilePicker Field for flutter_form_builder package. Used to select f
 version: 2.3.0
 repository: https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker
 issue_tracker: https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/issues
+funding: 
+  - https://opencollective.com/flutter-form-builder-ecosystem
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
