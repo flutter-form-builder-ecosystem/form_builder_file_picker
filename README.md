@@ -11,24 +11,24 @@ ___
 
 - [Features](#features)
 - [Use](#use)
-    - [Setup](#setup)
-    - [Basic use](#basic-use)
-    - [Specific uses](#specific-uses)
+  - [Setup](#setup)
+  - [Basic use](#basic-use)
+  - [Specific uses](#specific-uses)
 - [Support](#support)
-    - [Contribute](#contribute)
-    - [Questions and answers](#questions-and-answers)
-    - [Donations](#donations)
+  - [Contribute](#contribute)
+  - [Questions and answers](#questions-and-answers)
+  - [Donations](#donations)
 - [Roadmap](#roadmap)
 - [Ecosystem](#ecosystem)
 - [Thanks to](#thanks-to)
-    - [Contributors](#contributors)
+  - [Contributors](#contributors)
 
 ## Features
 
 - Automatic handle permissions
 - Show images preview
 
-## Usage
+## Use
 
 ### Setup
 
@@ -117,9 +117,9 @@ FormBuilderFilePicker(
 
 You have some ways to contribute to this packages
 
- - Beginner: Reporting bugs or request new features
- - Intermediate: Implement new features (from issues or not) and created pull requests
- - Advanced: Join the [organization](#ecosystem) like a member and help coding, manage issues, dicuss new features and other things
+- Beginner: Reporting bugs or request new features
+- Intermediate: Implement new features (from issues or not) and created pull requests
+- Advanced: Join the [organization](#ecosystem) like a member and help coding, manage issues, dicuss new features and other things
 
  See [contribution guide](https://github.com/flutter-form-builder-ecosystem/.github/blob/main/CONTRIBUTING.md) for more details
 
