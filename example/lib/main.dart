@@ -61,8 +61,10 @@ class MyHomePageState extends State<MyHomePage> {
                 onFileLoading: (val) {
                   debugPrint(val.toString());
                 },
-                customFileViewerBuilder:
-                    _useCustomFileViewer ? customFileViewerBuilder : null,
+                customFileViewerBuilder: _useCustomFileViewer
+                    ? (files, filesSetter) =>
+                        customFileViewerBuilder(files ?? [], (newValue) {})
+                    : null,
               ),
               const SizedBox(height: 20),
               Row(
@@ -104,28 +106,28 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget customFileViewerBuilder(
-    List<PlatformFile>? files,
+    List<PlatformFile> files,
     FormFieldSetter<List<PlatformFile>> setter,
   ) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final file = files![index];
-        return ListTile(
-          title: Text(file.name),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              files.removeAt(index);
-              setter.call([...files]);
+    return files.isEmpty
+        ? const Center(child: Text('No files'))
+        : ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(files[index].name),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    files.removeAt(index);
+                    setter.call([...files]);
+                  },
+                ),
+              );
             },
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => const Divider(
-        color: Colors.blueAccent,
-      ),
-      itemCount: files!.length,
-    );
+            separatorBuilder: (context, index) =>
+                const Divider(color: Colors.blueAccent),
+            itemCount: files.length,
+          );
   }
 }
