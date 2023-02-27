@@ -1,3 +1,10 @@
+## [2.4.0]
+
+* Add all desktops compatibilities
+* Fix issue with initialValue not taken from form initialValues
+* Improve example
+* Built with Flutter 3.7
+
 ## [2.3.0]
 
 * Move maxFiles display into counterText #32 (Thanks @grundid)
