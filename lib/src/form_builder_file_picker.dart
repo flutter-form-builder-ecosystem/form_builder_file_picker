@@ -193,6 +193,26 @@ class _FormBuilderFilePickerState
     _files = initialValue ?? [];
   }
 
+  Future<bool> isMobilePermissionGranted(FileType fileType) async {
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      final sdkInt = androidInfo.version.sdkInt;
+      if (sdkInt >= 33) {
+        switch (fileType) {
+          case FileType.image:
+            return await Permission.photos.request().isGranted;
+          case FileType.audio:
+            return await Permission.audio.request().isGranted;
+          case FileType.video:
+            return await Permission.videos.request().isGranted;
+          default:
+            return await Permission.manageExternalStorage.request().isGranted;
+        }
+      }
+    }
+    return await Permission.storage.request().isGranted;
+  }
+  
   Future<void> pickFiles(
       FormFieldState<List<PlatformFile>?> field, FileType fileType) async {
     FilePickerResult? resultList;
@@ -201,7 +221,7 @@ class _FormBuilderFilePickerState
       if (kIsWeb ||
           Platform.isLinux ||
           Platform.isWindows ||
-          await Permission.storage.request().isGranted) {
+          await isMobilePermissionGranted(fileType)) {
         resultList = await FilePicker.platform.pickFiles(
           type: fileType,
           allowedExtensions: widget.allowedExtensions,
