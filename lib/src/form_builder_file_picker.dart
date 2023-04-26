@@ -201,6 +201,7 @@ class _FormBuilderFilePickerState
       if (kIsWeb ||
           Platform.isLinux ||
           Platform.isWindows ||
+          Platform.isMacOS ||
           await Permission.storage.request().isGranted) {
         resultList = await FilePicker.platform.pickFiles(
           type: fileType,
