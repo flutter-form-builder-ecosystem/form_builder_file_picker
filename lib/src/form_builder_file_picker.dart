@@ -38,13 +38,13 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// icon will be displayed depending on file type
   final bool previewImages;
 
-  /// Widget to be tapped on by user in order to pick files
-  final Widget selector;
-
-  final List<TypeSelector>? typeSelectors;
-
-  /// Default types of files to be picked. Default set to [FileType.any]
-  final FileType type;
+  /// Create a list of type of document that you can pick
+  ///
+  /// Useful if you want to be able to pick documents and images in the same form field and
+  /// need to define different file types and different selectors.
+  ///
+  /// By default use `[TypeSelector(type: FileType.any, selector: Icon(Icons.add_circle))]`
+  final List<TypeSelector> typeSelectors;
 
   /// Allowed file extensions for files to be selected
   final List<String>? allowedExtensions;
@@ -90,14 +90,9 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.withReadStream = false,
     this.allowMultiple = false,
     this.previewImages = true,
-    @Deprecated("please use typeSelectors for better picker and file type control")
-        this.selector = const Icon(Icons.add_circle),
-    @Deprecated("please use typeSelectors for better picker and file type control")
-        this.type = FileType.any,
-    // TODO: once the above fields are removed typeSelectors should be made not null and initialized as
-    // const [TypeSelector(type: FileType.any, selector: Icon(Icons.add_circle))]
-    // the typeSelectorList variable can be then removed and we can use typeSelectors directly
-    this.typeSelectors,
+    this.typeSelectors = const [
+      TypeSelector(type: FileType.any, selector: Icon(Icons.add_circle))
+    ],
     this.allowedExtensions,
     this.onFileLoading,
     this.allowCompression = true,
@@ -105,9 +100,6 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   }) : super(
           builder: (FormFieldState<List<PlatformFile>?> field) {
             final state = field as _FormBuilderFilePickerState;
-
-            List<TypeSelector> typeSelectorList =
-                typeSelectors ?? [TypeSelector(type: type, selector: selector)];
 
             return InputDecorator(
               decoration: state.decoration.copyWith(
@@ -119,7 +111,7 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      ...typeSelectorList.map(
+                      ...typeSelectors.map(
                         (typeSelector) => InkWell(
                           onTap: state.enabled &&
                                   (null == state._remainingItemCount ||

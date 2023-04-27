@@ -3,7 +3,7 @@
 File Picker Field for [flutter_form_builder](https://pub.dev/packages/flutter_form_builder) package
 
 [![Pub Version](https://img.shields.io/pub/v/form_builder_file_picker?logo=flutter&style=for-the-badge)](https://pub.dev/packages/form_builder_file_picker)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/flutter-form-builder-ecosystem/form_builder_file_picker/Base?logo=github&style=for-the-badge)](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/actions/workflows/base.yaml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/flutter-form-builder-ecosystem/form_builder_file_picker/base.yaml?branch=main&logo=github&style=for-the-badge)](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/actions/workflows/base.yaml)
 [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/flutter-form-builder-ecosystem/form_builder_file_picker?logo=codefactor&style=for-the-badge)](https://www.codefactor.io/repository/github/flutter-form-builder-ecosystem/form_builder_file_picker)
 [![Codecov](https://img.shields.io/codecov/c/github/flutter-form-builder-ecosystem/form_builder_file_picker?logo=codecov&style=for-the-badge)](https://codecov.io/gh/flutter-form-builder-ecosystem/form_builder_file_picker/)
 ___
@@ -68,9 +68,8 @@ Since this package makes use of [file_picker](https://pub.dev/packages/file_pick
 ### Specific uses
 
 On mobile platforms the file picker will open a default document picker if used with `FileType.any`.
-If you want to be able to pick documents and images in the same form field, you will need to define different file types and thus different selectors. To achieve this use the `typeSelectors` parameter.
-This way the user will see two buttons to open a file picker for documents and a file picker for the photos
-gallery.
+If you want to be able to pick documents and images in the same form field, you will need to define different file types and different selectors. To achieve this use the `typeSelectors` parameter.
+This way the user will see two buttons to open a file picker for documents and a file picker for the photos gallery.
 
 For example:
 
