@@ -1,3 +1,15 @@
+## [3.0.0]
+
+### BREAKING CHANGE
+
+* Remove `types` property. Use `typeSelectors` instead
+* Remove `selector` property. Use `typeSelectors` instead
+
+### Improvements
+
+* Remove `permission_handler` dependency
+* Able desktop platforms support
+
 ## [2.4.0]
 
 * Add all desktops compatibilities
