@@ -6,7 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 /// Signature of a function to build a custom file viewer [Widget] for
 /// [FormBuilderFilePicker].
@@ -74,18 +73,18 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
   /// Creates field for image(s) from user device storage
   FormBuilderFilePicker({
     //From Super
-    Key? key,
-    required String name,
-    FormFieldValidator<List<PlatformFile>>? validator,
-    List<PlatformFile>? initialValue,
-    InputDecoration decoration = const InputDecoration(),
-    ValueChanged<List<PlatformFile>?>? onChanged,
-    ValueTransformer<List<PlatformFile>?>? valueTransformer,
-    bool enabled = true,
-    FormFieldSetter<List<PlatformFile>>? onSaved,
-    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
-    VoidCallback? onReset,
-    FocusNode? focusNode,
+    super.key,
+    required super.name,
+    super.validator,
+    super.initialValue,
+    super.decoration,
+    super.onChanged,
+    super.valueTransformer,
+    super.enabled,
+    super.onSaved,
+    super.autovalidateMode = AutovalidateMode.disabled,
+    super.onReset,
+    super.focusNode,
     this.maxFiles,
     this.withData = kIsWeb,
     this.withReadStream = false,
@@ -104,18 +103,6 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
     this.allowCompression = true,
     this.customFileViewerBuilder,
   }) : super(
-          key: key,
-          initialValue: initialValue,
-          name: name,
-          validator: validator,
-          valueTransformer: valueTransformer,
-          onChanged: onChanged,
-          autovalidateMode: autovalidateMode,
-          onSaved: onSaved,
-          enabled: enabled,
-          onReset: onReset,
-          decoration: decoration,
-          focusNode: focusNode,
           builder: (FormFieldState<List<PlatformFile>?> field) {
             final state = field as _FormBuilderFilePickerState;
 
@@ -198,23 +185,15 @@ class _FormBuilderFilePickerState
     FilePickerResult? resultList;
 
     try {
-      if (kIsWeb ||
-          Platform.isLinux ||
-          Platform.isWindows ||
-          Platform.isMacOS ||
-          await Permission.storage.request().isGranted) {
-        resultList = await FilePicker.platform.pickFiles(
-          type: fileType,
-          allowedExtensions: widget.allowedExtensions,
-          allowCompression: widget.allowCompression,
-          onFileLoading: widget.onFileLoading,
-          allowMultiple: widget.allowMultiple,
-          withData: widget.withData,
-          withReadStream: widget.withReadStream,
-        );
-      } else {
-        throw Exception('Storage Permission not granted');
-      }
+      resultList = await FilePicker.platform.pickFiles(
+        type: fileType,
+        allowedExtensions: widget.allowedExtensions,
+        allowCompression: widget.allowCompression,
+        onFileLoading: widget.onFileLoading,
+        allowMultiple: widget.allowMultiple,
+        withData: widget.withData,
+        withReadStream: widget.withReadStream,
+      );
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
