@@ -1,3 +1,9 @@
+## [4.0.0-dev.1]
+
+### BREAKING CHANGE
+
+* Update constraints to Flutter 3.10
+
 ## [3.0.0]
 
 ### BREAKING CHANGE
