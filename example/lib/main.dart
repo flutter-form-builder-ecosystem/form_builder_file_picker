@@ -47,11 +47,11 @@ class MyHomePageState extends State<MyHomePage> {
                 allowMultiple: true,
                 previewImages: true,
                 onChanged: (val) => debugPrint(val.toString()),
-                typeSelectors: [
+                typeSelectors: const [
                   TypeSelector(
                     type: FileType.any,
                     selector: Row(
-                      children: const <Widget>[
+                      children: <Widget>[
                         Icon(Icons.file_upload),
                         Text('Upload'),
                       ],
