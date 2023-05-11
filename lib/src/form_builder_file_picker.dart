@@ -27,7 +27,8 @@ class TypeSelector {
 }
 
 /// Field for image(s) from user device storage
-class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
+class FormBuilderFilePicker
+    extends FormBuilderFieldDecoration<List<PlatformFile>> {
   /// Maximum number of files needed for this field
   final int? maxFiles;
 
@@ -136,12 +137,12 @@ class FormBuilderFilePicker extends FormBuilderField<List<PlatformFile>> {
         );
 
   @override
-  FormBuilderFieldState<FormBuilderFilePicker, List<PlatformFile>>
+  FormBuilderFieldDecorationState<FormBuilderFilePicker, List<PlatformFile>>
       createState() => _FormBuilderFilePickerState();
 }
 
-class _FormBuilderFilePickerState
-    extends FormBuilderFieldState<FormBuilderFilePicker, List<PlatformFile>> {
+class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
+    FormBuilderFilePicker, List<PlatformFile>> {
   /// Image File Extensions.
   ///
   /// Note that images may be previewed.
