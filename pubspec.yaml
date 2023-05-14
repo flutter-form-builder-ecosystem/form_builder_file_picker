@@ -8,7 +8,7 @@ funding:
   - https://opencollective.com/flutter-form-builder-ecosystem
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'
 
 dependencies:
@@ -16,7 +16,7 @@ dependencies:
   file_picker: ^5.3.0
   flutter:
     sdk: flutter
-  flutter_form_builder: ^9.0.0-dev.1
+  flutter_form_builder: ^9.0.0
 
 platforms:
   android:
