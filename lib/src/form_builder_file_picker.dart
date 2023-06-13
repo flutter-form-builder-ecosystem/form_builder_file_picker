@@ -243,7 +243,7 @@ class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
                       child: (imageFileExts.contains(
                                   files[index].extension!.toLowerCase()) &&
                               widget.previewImages)
-                          ? kIsWeb
+                          ? widget.withData
                               ? Image.memory(files[index].bytes!,
                                   fit: BoxFit.cover)
                               : Image.file(File(files[index].path!),
