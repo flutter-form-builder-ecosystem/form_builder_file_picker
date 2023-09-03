@@ -71,6 +71,9 @@ class FormBuilderFilePicker
   /// to support user interactions with the picked files.
   final FileViewerBuilder? customFileViewerBuilder;
 
+  /// Allow to customise the view of the pickers.
+  final Widget Function(List<Widget> types)? customTypeViewerBuilder;
+
   /// Creates field for image(s) from user device storage
   FormBuilderFilePicker({
     //From Super
@@ -98,6 +101,7 @@ class FormBuilderFilePicker
     this.onFileLoading,
     this.allowCompression = true,
     this.customFileViewerBuilder,
+    this.customTypeViewerBuilder
   }) : super(
           builder: (FormFieldState<List<PlatformFile>?> field) {
             final state = field as _FormBuilderFilePickerState;
@@ -109,20 +113,11 @@ class FormBuilderFilePicker
                       : null),
               child: Column(
                 children: <Widget>[
-                  Row(
+                  customTypeViewerBuilder != null
+                      ? customTypeViewerBuilder(state.getTypeSelectorActions(typeSelectors, field))
+                      : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      ...typeSelectors.map(
-                        (typeSelector) => InkWell(
-                          onTap: state.enabled &&
-                                  (null == state._remainingItemCount ||
-                                      state._remainingItemCount! > 0)
-                              ? () => state.pickFiles(field, typeSelector.type)
-                              : null,
-                          child: typeSelector.selector,
-                        ),
-                      ),
-                    ],
+                    children: state.getTypeSelectorActions(typeSelectors, field),
                   ),
                   const SizedBox(height: 3),
                   customFileViewerBuilder != null
@@ -303,6 +298,22 @@ class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
         );
       },
     );
+  }
+
+  List<Widget> getTypeSelectorActions(List<TypeSelector> typeSelectors, FormFieldState<List<PlatformFile>?> field) {
+    return <Widget>[
+      ...typeSelectors.map(
+            (typeSelector) =>
+            InkWell(
+              onTap: enabled &&
+                  (null == _remainingItemCount ||
+                      _remainingItemCount! > 0)
+                  ? () => pickFiles(field, typeSelector.type)
+                  : null,
+              child: typeSelector.selector,
+            ),
+      ),
+    ];
   }
 
   IconData getIconData(String fileExtension) {
