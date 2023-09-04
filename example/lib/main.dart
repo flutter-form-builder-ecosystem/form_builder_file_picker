@@ -58,6 +58,10 @@ class MyHomePageState extends State<MyHomePage> {
                     ),
                   )
                 ],
+                customTypeViewerBuilder: (children) => Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: children,
+                ),
                 onFileLoading: (val) {
                   debugPrint(val.toString());
                 },

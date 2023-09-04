@@ -71,34 +71,39 @@ class FormBuilderFilePicker
   /// to support user interactions with the picked files.
   final FileViewerBuilder? customFileViewerBuilder;
 
+  /// Allow to customise the view of the pickers.
+  final Widget Function(List<Widget> types)? customTypeViewerBuilder;
+
   /// Creates field for image(s) from user device storage
-  FormBuilderFilePicker({
-    //From Super
-    super.key,
-    required super.name,
-    super.validator,
-    super.initialValue,
-    super.decoration,
-    super.onChanged,
-    super.valueTransformer,
-    super.enabled,
-    super.onSaved,
-    super.autovalidateMode = AutovalidateMode.disabled,
-    super.onReset,
-    super.focusNode,
-    this.maxFiles,
-    this.withData = kIsWeb,
-    this.withReadStream = false,
-    this.allowMultiple = false,
-    this.previewImages = true,
-    this.typeSelectors = const [
-      TypeSelector(type: FileType.any, selector: Icon(Icons.add_circle))
-    ],
-    this.allowedExtensions,
-    this.onFileLoading,
-    this.allowCompression = true,
-    this.customFileViewerBuilder,
-  }) : super(
+  FormBuilderFilePicker(
+      {
+      //From Super
+      super.key,
+      required super.name,
+      super.validator,
+      super.initialValue,
+      super.decoration,
+      super.onChanged,
+      super.valueTransformer,
+      super.enabled,
+      super.onSaved,
+      super.autovalidateMode = AutovalidateMode.disabled,
+      super.onReset,
+      super.focusNode,
+      this.maxFiles,
+      this.withData = kIsWeb,
+      this.withReadStream = false,
+      this.allowMultiple = false,
+      this.previewImages = true,
+      this.typeSelectors = const [
+        TypeSelector(type: FileType.any, selector: Icon(Icons.add_circle))
+      ],
+      this.allowedExtensions,
+      this.onFileLoading,
+      this.allowCompression = true,
+      this.customFileViewerBuilder,
+      this.customTypeViewerBuilder})
+      : super(
           builder: (FormFieldState<List<PlatformFile>?> field) {
             final state = field as _FormBuilderFilePickerState;
 
@@ -109,21 +114,14 @@ class FormBuilderFilePicker
                       : null),
               child: Column(
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      ...typeSelectors.map(
-                        (typeSelector) => InkWell(
-                          onTap: state.enabled &&
-                                  (null == state._remainingItemCount ||
-                                      state._remainingItemCount! > 0)
-                              ? () => state.pickFiles(field, typeSelector.type)
-                              : null,
-                          child: typeSelector.selector,
+                  customTypeViewerBuilder != null
+                      ? customTypeViewerBuilder(
+                          state.getTypeSelectorActions(typeSelectors, field))
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: state.getTypeSelectorActions(
+                              typeSelectors, field),
                         ),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 3),
                   customFileViewerBuilder != null
                       ? customFileViewerBuilder.call(state._files,
@@ -303,6 +301,21 @@ class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
         );
       },
     );
+  }
+
+  List<Widget> getTypeSelectorActions(List<TypeSelector> typeSelectors,
+      FormFieldState<List<PlatformFile>?> field) {
+    return <Widget>[
+      ...typeSelectors.map(
+        (typeSelector) => InkWell(
+          onTap: enabled &&
+                  (null == _remainingItemCount || _remainingItemCount! > 0)
+              ? () => pickFiles(field, typeSelector.type)
+              : null,
+          child: typeSelector.selector,
+        ),
+      ),
+    ];
   }
 
   IconData getIconData(String fileExtension) {
