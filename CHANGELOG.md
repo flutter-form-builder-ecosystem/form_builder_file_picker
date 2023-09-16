@@ -1,3 +1,9 @@
+## [4.1.0]
+
+* Use withData instead kIsWeb to load images
+* Add `customTypeViewerBuilder` property to allow custom file viewer widget
+* Built with Flutter 3.13
+
 ## [4.0.0]
 
 ### BREAKING CHANGES
