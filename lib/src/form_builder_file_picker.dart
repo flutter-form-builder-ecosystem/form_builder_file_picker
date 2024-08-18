@@ -58,7 +58,7 @@ class FormBuilderFilePicker
   /// Whether to allow file compression
   final bool allowCompression;
 
-  final int? compressionQuality;
+  final int compressionQuality;
 
   /// If [withData] is set, picked files will have its byte data immediately available on memory as [Uint8List]
   /// which can be useful if you are picking it for server upload or similar.
@@ -103,7 +103,7 @@ class FormBuilderFilePicker
       this.allowedExtensions,
       this.onFileLoading,
       this.allowCompression = true,
-        this.compressionQuality,
+      this.compressionQuality = 30,
       this.customFileViewerBuilder,
       this.customTypeViewerBuilder})
       : super(
@@ -183,7 +183,7 @@ class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
         type: fileType,
         allowedExtensions: widget.allowedExtensions,
         allowCompression: widget.allowCompression,
-        compressionQuality: widget.compressionQuality ?? 30,
+        compressionQuality: widget.compressionQuality,
         onFileLoading: widget.onFileLoading,
         allowMultiple: widget.allowMultiple,
         withData: widget.withData,
