@@ -27,5 +27,5 @@ jobs:
       id-token: write
     uses: flutter-form-builder-ecosystem/.github/.github/workflows/deployment.yaml@main
     if: ${{ github.ref_type == 'tag' }}
-    needs: build
+    needs: [build, example]
 
