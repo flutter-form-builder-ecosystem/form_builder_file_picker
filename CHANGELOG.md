@@ -1,3 +1,9 @@
+## 4.3.0
+
+* Add `compressionQuality` parameter, that solving app crashes on some Huawei phones
+* Set minimal Flutter version to 3.27.0
+* Set minimal Dart version to 3.6.0
+
 ## 4.2.0
 
 * Upgrade file_picker to 8.x.x
