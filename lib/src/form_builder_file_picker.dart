@@ -263,7 +263,7 @@ class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
                       width: double.infinity,
-                      color: Colors.white.withOpacity(.8),
+                      color: Colors.white.withValues(alpha: .8),
                       child: Text(
                         files[index].name,
                         style: theme.textTheme.bodySmall,
@@ -283,7 +283,7 @@ class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
                           child: Container(
                             margin: const EdgeInsets.all(3),
                             decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(.7),
+                              color: Colors.grey.withValues(alpha: .7),
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
