@@ -16,7 +16,7 @@ environment:
 
 dependencies:
   community_material_icon: ^5.9.55
-  file_picker: ^8.1.6
+  file_picker: ">=8.1.6 <10.0.0"
   flutter:
     sdk: flutter
   flutter_form_builder: ^9.6.0
