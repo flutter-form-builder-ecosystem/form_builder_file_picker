@@ -46,6 +46,7 @@ class MyHomePageState extends State<MyHomePage> {
                 maxFiles: null,
                 allowMultiple: true,
                 previewImages: true,
+                enableImageCropper: true,
                 onChanged: (val) => debugPrint(val.toString()),
                 typeSelectors: const [
                   TypeSelector(

@@ -3,9 +3,10 @@ import 'dart:io';
 
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 /// Signature of a function to build a custom file viewer [Widget] for
 /// [FormBuilderFilePicker].
@@ -34,6 +35,34 @@ class FormBuilderFilePicker
 
   /// Allows picking of multiple files
   final bool allowMultiple;
+
+  /// Allows cropping image(s) when using [FileType.image]
+  ///
+  /// How to install this feature
+  /// - Android: Add `UCropActivity` into your `AndroidManifest.xml`
+  /// ```
+  /// <activity
+  ///    android:name="com.yalantis.ucrop.UCropActivity"
+  ///    android:screenOrientation="portrait"
+  ///    android:theme="@style/Ucrop.CropTheme"/>
+  /// ```
+  ///
+  /// iOS: No configuration required
+  ///
+  /// Web: Add following codes inside `<head>` tag in file web/index.html
+  /// ```
+  /// <head>
+  ///   ....
+  ///
+  ///   <!-- cropperjs -->
+  ///   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css" />
+  ///   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  ///
+  ///   ....
+  /// </head>
+  /// ```
+
+  final bool enableImageCropper;
 
   /// If set to true, a thumbnail of image files will be shown; else the default
   /// icon will be displayed depending on file type
@@ -97,6 +126,7 @@ class FormBuilderFilePicker
       this.withReadStream = false,
       this.allowMultiple = false,
       this.previewImages = true,
+      this.enableImageCropper = false,
       this.typeSelectors = const [
         TypeSelector(type: FileType.any, selector: Icon(Icons.add_circle))
       ],
@@ -189,6 +219,68 @@ class _FormBuilderFilePickerState extends FormBuilderFieldDecorationState<
         withData: widget.withData,
         withReadStream: widget.withReadStream,
       );
+
+      if (widget.enableImageCropper && fileType == FileType.image) {
+        final files = resultList?.files ?? [];
+        for(final (index, file) in files.indexed) {
+          final pickedFile = file.xFile;
+          final blobUrl = pickedFile.path;
+
+          // If the widget was removed from the tree while the asynchronous platform
+          // message was in flight, we want to discard the reply rather than calling
+          // setState to update our non-existent appearance.
+          if (!mounted) return;
+
+          final croppedFile = await ImageCropper().cropImage(
+            sourcePath: blobUrl,
+            uiSettings: [
+              AndroidUiSettings(
+                toolbarTitle: 'Cropper',
+                toolbarColor: Colors.grey,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false,
+                aspectRatioPresets: [
+                  CropAspectRatioPreset.square,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio16x9,
+                ],
+              ),
+              IOSUiSettings(
+                title: 'Cropper',
+                aspectRatioPresets: [
+                  CropAspectRatioPreset.square,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio16x9,
+                ],
+              ),
+              WebUiSettings(
+                context: context,
+              ),
+            ],
+          );
+
+          if(croppedFile != null) {
+            final filePath = croppedFile.path;
+            final fileBytes = await croppedFile.readAsBytes();
+            final fileName = pickedFile.name;
+            final fileSize = fileBytes.length;
+
+            final platformFile = PlatformFile(
+              path: filePath,
+              name: fileName,
+              size: fileSize,
+              bytes: fileBytes,
+            );
+
+            resultList!.files[index] = platformFile;
+          }
+        }
+      }
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
