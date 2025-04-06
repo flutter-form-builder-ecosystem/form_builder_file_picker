@@ -1,3 +1,12 @@
+## 5.0.0
+
+### BREAKING CHANGES
+
+* Compatibility with `file_picker` 10.0.x. See details on their [changelog](https://pub.dev/packages/file_picker/changelog)
+* Compatibility with `flutter_form_builder` 10.0.x. See details on their [changelog](https://pub.dev/packages/flutter_form_builder/changelog)
+* Set minimal Flutter version to 3.29.0
+* Set minimal Dart version to 3.7.0
+
 ## 4.3.0
 
 * Add `compressionQuality` parameter, that solving app crashes on some Huawei phones
