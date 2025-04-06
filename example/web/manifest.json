@@ -1,6 +1,6 @@
 {
-    "name": "form_builder_file_picker",
-    "short_name": "form_builder_file_picker",
+    "name": "example",
+    "short_name": "example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
