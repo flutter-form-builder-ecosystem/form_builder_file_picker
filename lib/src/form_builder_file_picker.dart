@@ -20,6 +20,9 @@ typedef FileViewerBuilder =
       FormFieldSetter<List<PlatformFile>> filesSetter,
     );
 
+typedef OnDefaultFileViewerBuilderItemTap =
+    void Function(PlatformFile file, int index);
+
 class TypeSelector {
   final FileType type;
   final Widget selector;
@@ -77,6 +80,9 @@ class FormBuilderFilePicker
   /// Allow to customise the view of the pickers.
   final Widget Function(List<Widget> types)? customTypeViewerBuilder;
 
+  /// Allow to set file tap functionality callback
+  final OnDefaultFileViewerBuilderItemTap? onDefaultViewerItemTap;
+
   /// Creates field for image(s) from user device storage
   FormBuilderFilePicker({
     //From Super
@@ -110,6 +116,7 @@ class FormBuilderFilePicker
     this.compressionQuality = 0,
     this.customFileViewerBuilder,
     this.customTypeViewerBuilder,
+    this.onDefaultViewerItemTap,
   }) : super(
          builder: (FormFieldState<List<PlatformFile>?> field) {
            final state = field as _FormBuilderFilePickerState;
@@ -143,6 +150,7 @@ class FormBuilderFilePicker
                      : state.defaultFileViewer(
                        state._files,
                        (files) => state._setFiles(files ?? [], field),
+                       onDefaultViewerItemTap,
                      ),
                ],
              ),
@@ -238,6 +246,7 @@ class _FormBuilderFilePickerState
   Widget defaultFileViewer(
     List<PlatformFile> files,
     FormFieldSetter<List<PlatformFile>> setter,
+    OnDefaultFileViewerBuilderItemTap? onItemTap,
   ) {
     final theme = Theme.of(context);
 
@@ -260,31 +269,38 @@ class _FormBuilderFilePickerState
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    child:
-                        (imageFileExts.contains(
-                                  files[index].extension!.toLowerCase(),
-                                ) &&
-                                widget.previewImages)
-                            ? widget.withData
-                                ? Image.memory(
-                                  files[index].bytes!,
-                                  fit: BoxFit.cover,
-                                )
-                                : Image.file(
-                                  File(files[index].path!),
-                                  fit: BoxFit.cover,
-                                )
-                            : Container(
-                              alignment: Alignment.center,
-                              color: theme.primaryColor,
-                              child: Icon(
-                                getIconData(files[index].extension!),
-                                color: Colors.white,
-                                size: 56,
+                  InkWell(
+                    onTap: () {
+                      if (onItemTap != null) {
+                        onItemTap(files[index], index);
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      child:
+                          (imageFileExts.contains(
+                                    files[index].extension!.toLowerCase(),
+                                  ) &&
+                                  widget.previewImages)
+                              ? widget.withData
+                                  ? Image.memory(
+                                    files[index].bytes!,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Image.file(
+                                    File(files[index].path!),
+                                    fit: BoxFit.cover,
+                                  )
+                              : Container(
+                                alignment: Alignment.center,
+                                color: theme.primaryColor,
+                                child: Icon(
+                                  getIconData(files[index].extension!),
+                                  color: Colors.white,
+                                  size: 56,
+                                ),
                               ),
-                            ),
+                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 2),
