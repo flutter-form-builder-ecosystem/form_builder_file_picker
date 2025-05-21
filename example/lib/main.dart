@@ -26,7 +26,7 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormBuilderState>();
-  bool _useCustomFileViewer = true;
+  bool _useCustomFileViewer = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +69,12 @@ class MyHomePageState extends State<MyHomePage> {
                         ? (files, filesSetter) =>
                             customFileViewerBuilder(files ?? [], (newValue) {})
                         : null,
+                onDefaultViewerItemTap:
+                    _useCustomFileViewer
+                        ? null
+                        : (PlatformFile file, int index) {
+                          debugPrint(file.name);
+                        },
               ),
               const SizedBox(height: 20),
               Row(
@@ -81,12 +87,11 @@ class MyHomePageState extends State<MyHomePage> {
                       debugPrint(_formKey.currentState!.value.toString());
                     },
                   ),
-                  const Spacer(),
                   ElevatedButton(
                     child: Text(
                       _useCustomFileViewer
-                          ? 'Use Default File Viewer'
-                          : 'Use Custom File Viewer',
+                          ? 'Use Default Viewer'
+                          : 'Use Custom Viewer',
                     ),
                     onPressed: () {
                       setState(
@@ -94,7 +99,6 @@ class MyHomePageState extends State<MyHomePage> {
                       );
                     },
                   ),
-                  const Spacer(),
                   ElevatedButton(
                     child: const Text('Reset'),
                     onPressed: () {
