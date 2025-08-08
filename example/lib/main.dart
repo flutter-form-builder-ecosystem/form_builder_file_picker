@@ -56,25 +56,22 @@ class MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ],
-                customTypeViewerBuilder:
-                    (children) => Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: children,
-                    ),
+                customTypeViewerBuilder: (children) => Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: children,
+                ),
                 onFileLoading: (val) {
                   debugPrint(val.toString());
                 },
-                customFileViewerBuilder:
-                    _useCustomFileViewer
-                        ? (files, filesSetter) =>
-                            customFileViewerBuilder(files ?? [], (newValue) {})
-                        : null,
-                onDefaultViewerItemTap:
-                    _useCustomFileViewer
-                        ? null
-                        : (PlatformFile file, int index) {
-                          debugPrint(file.name);
-                        },
+                customFileViewerBuilder: _useCustomFileViewer
+                    ? (files, filesSetter) =>
+                          customFileViewerBuilder(files ?? [], (newValue) {})
+                    : null,
+                onDefaultViewerItemTap: _useCustomFileViewer
+                    ? null
+                    : (PlatformFile file, int index) {
+                        debugPrint(file.name);
+                      },
               ),
               const SizedBox(height: 20),
               Row(
@@ -121,22 +118,22 @@ class MyHomePageState extends State<MyHomePage> {
     return files.isEmpty
         ? const Center(child: Text('No files'))
         : ListView.separated(
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(files[index].name),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  files.removeAt(index);
-                  setter.call([...files]);
-                },
-              ),
-            );
-          },
-          separatorBuilder:
-              (context, index) => const Divider(color: Colors.blueAccent),
-          itemCount: files.length,
-        );
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(files[index].name),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    files.removeAt(index);
+                    setter.call([...files]);
+                  },
+                ),
+              );
+            },
+            separatorBuilder: (context, index) =>
+                const Divider(color: Colors.blueAccent),
+            itemCount: files.length,
+          );
   }
 }

@@ -123,35 +123,34 @@ class FormBuilderFilePicker
 
            return InputDecorator(
              decoration: state.decoration.copyWith(
-               counterText:
-                   maxFiles != null
-                       ? '${state._files.length} / $maxFiles'
-                       : null,
+               counterText: maxFiles != null
+                   ? '${state._files.length} / $maxFiles'
+                   : null,
              ),
              child: Column(
                children: <Widget>[
                  customTypeViewerBuilder != null
                      ? customTypeViewerBuilder(
-                       state.getTypeSelectorActions(typeSelectors, field),
-                     )
+                         state.getTypeSelectorActions(typeSelectors, field),
+                       )
                      : Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: state.getTypeSelectorActions(
-                         typeSelectors,
-                         field,
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: state.getTypeSelectorActions(
+                           typeSelectors,
+                           field,
+                         ),
                        ),
-                     ),
                  const SizedBox(height: 3),
                  customFileViewerBuilder != null
                      ? customFileViewerBuilder.call(
-                       state._files,
-                       (files) => state._setFiles(files ?? [], field),
-                     )
+                         state._files,
+                         (files) => state._setFiles(files ?? [], field),
+                       )
                      : state.defaultFileViewer(
-                       state._files,
-                       (files) => state._setFiles(files ?? [], field),
-                       onDefaultViewerItemTap,
-                     ),
+                         state._files,
+                         (files) => state._setFiles(files ?? [], field),
+                         onDefaultViewerItemTap,
+                       ),
                ],
              ),
            );
@@ -279,27 +278,27 @@ class _FormBuilderFilePickerState
                       alignment: Alignment.center,
                       child:
                           (imageFileExts.contains(
-                                    files[index].extension!.toLowerCase(),
-                                  ) &&
-                                  widget.previewImages)
-                              ? widget.withData
-                                  ? Image.memory(
+                                files[index].extension!.toLowerCase(),
+                              ) &&
+                              widget.previewImages)
+                          ? widget.withData
+                                ? Image.memory(
                                     files[index].bytes!,
                                     fit: BoxFit.cover,
                                   )
-                                  : Image.file(
+                                : Image.file(
                                     File(files[index].path!),
                                     fit: BoxFit.cover,
                                   )
-                              : Container(
-                                alignment: Alignment.center,
-                                color: theme.primaryColor,
-                                child: Icon(
-                                  getIconData(files[index].extension!),
-                                  color: Colors.white,
-                                  size: 56,
-                                ),
+                          : Container(
+                              alignment: Alignment.center,
+                              color: theme.primaryColor,
+                              child: Icon(
+                                getIconData(files[index].extension!),
+                                color: Colors.white,
+                                size: 56,
                               ),
+                            ),
                     ),
                   ),
                   Container(
@@ -357,9 +356,9 @@ class _FormBuilderFilePickerState
         (typeSelector) => InkWell(
           onTap:
               enabled &&
-                      (null == _remainingItemCount || _remainingItemCount! > 0)
-                  ? () => pickFiles(field, typeSelector.type)
-                  : null,
+                  (null == _remainingItemCount || _remainingItemCount! > 0)
+              ? () => pickFiles(field, typeSelector.type)
+              : null,
           child: typeSelector.selector,
         ),
       ),
