@@ -205,7 +205,7 @@ class _FormBuilderFilePickerState
     FilePickerResult? resultList;
 
     try {
-      resultList = await FilePicker.platform.pickFiles(
+      resultList = await FilePicker.pickFiles(
         type: fileType,
         allowedExtensions: widget.allowedExtensions,
         compressionQuality: widget.compressionQuality,
