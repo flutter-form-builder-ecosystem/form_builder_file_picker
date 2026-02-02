@@ -1,3 +1,10 @@
+## 5.1.0
+
+* Update constraints to Flutter 3.38
+* Update constraints to Dart 3.10
+* Add onTap callback on default preview item widget. Solved [#103](https://github.com/flutter-form-builder-ecosystem/form_builder_file_picker/issues/103) thanks to [@SouksavathPMS](https://github.com/SouksavathPMS)
+* Update readme
+
 ## 5.0.0
 
 ### BREAKING CHANGES
