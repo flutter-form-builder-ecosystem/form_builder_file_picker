@@ -10,12 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_form_builder: ^10.3.0+1
+  flutter_form_builder: ^11.0.0
   form_builder_file_picker:
       path: ../
+  material_ui: ^1.0.0
 
 dev_dependencies:
-  flutter_lints: ">=6.0.0"
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
 

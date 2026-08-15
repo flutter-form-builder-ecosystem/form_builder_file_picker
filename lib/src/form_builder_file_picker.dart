@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 /// Signature of a function to build a custom file viewer [Widget] for
@@ -205,7 +205,7 @@ class _FormBuilderFilePickerState
     FilePickerResult? resultList;
 
     try {
-      resultList = await FilePicker.platform.pickFiles(
+      resultList = await FilePicker.pickFiles(
         type: fileType,
         allowedExtensions: widget.allowedExtensions,
         compressionQuality: widget.compressionQuality,
