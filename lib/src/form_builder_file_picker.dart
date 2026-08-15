@@ -14,14 +14,15 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 /// by the [FormBuilderFilePicker].
 ///
 /// [filesSetter] can be used to update the value of [FormBuilderFilePicker].
-typedef FileViewerBuilder =
-    Widget Function(
-      List<PlatformFile>? files,
-      FormFieldSetter<List<PlatformFile>> filesSetter,
-    );
+typedef FileViewerBuilder = Widget Function(
+  List<PlatformFile>? files,
+  FormFieldSetter<List<PlatformFile>> filesSetter,
+);
 
-typedef OnDefaultFileViewerBuilderItemTap =
-    void Function(PlatformFile file, int index);
+typedef OnDefaultFileViewerBuilderItemTap = void Function(
+  PlatformFile file,
+  int index,
+);
 
 class TypeSelector {
   final FileType type;
